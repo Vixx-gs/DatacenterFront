@@ -1,0 +1,58 @@
+.ficha-header {
+  display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px;
+}
+
+.ficha-header-info { flex: 1; }
+
+.ficha-nombre {
+  font-size: 22px; font-weight: 800; color: #0a0f2c;
+  letter-spacing: -0.02em; margin-bottom: 8px;
+}
+
+.ficha-estado-row { display: flex; align-items: center; gap: 10px; }
+
+.ficha-grid-main {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;
+}
+
+.ficha-col { display: flex; flex-direction: column; gap: 12px; }
+
+.ficha-card {
+  background: #ffffff; border: 1px solid #d0d7f0;
+  border-radius: 10px; padding: 16px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.ficha-card-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #0a0f2c;
+  background: #eef1fb; margin: -16px -20px 14px;
+  padding: 8px 20px; border-radius: 10px 10px 0 0;
+  border-bottom: 1px solid #d0d7f0;
+}
+
+.ficha-fields-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ficha-field { display: flex; flex-direction: column; gap: 2px; }
+
+.ficha-field-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #8a96c4;
+}
+
+.ficha-field-value { font-size: 13px; color: #0a0f2c; font-weight: 500; }
+.ficha-empty { color: #8a96c4; font-size: 13px; font-style: italic; padding: 8px 0; }
+
+@media (max-width: 768px) {
+  .ficha-grid-main {
+    grid-template-columns: 1fr;
+  }
+
+  .ficha-card {
+    padding: 14px 16px;
+  }
+
+  .ficha-card-title {
+    margin: -14px -16px 12px;
+    padding: 8px 16px;
+  }
+}

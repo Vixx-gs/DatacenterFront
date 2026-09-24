@@ -1,0 +1,293 @@
+<div *ngIf="vehiculo">
+
+  <!-- HEADER -->
+  <div class="ficha-header">
+    <button class="btn btn-ghost btn-sm" (click)="volver()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+      Volver
+    </button>
+    <div class="ficha-header-titles">
+      <div class="ficha-header-top">
+        <div class="ficha-matricula-box">
+          <span class="ficha-matricula-label">MATRÍCULA</span>
+          <span class="ficha-matricula-val">{{ vehiculo.matricula }}</span>
+        </div>
+        <div class="ficha-estado-box">
+          <span class="ficha-matricula-label">ESTADO</span>
+          <span class="badge" [ngClass]="badgeClass(vehiculo.estado)" style="font-size:13px; padding:4px 12px;">{{
+            vehiculo.estado }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ficha-grid-main">
+
+    <!-- COL IZQUIERDA -->
+    <div class="ficha-col">
+
+      <!-- DATOS VEHÍCULO -->
+      <div class="ficha-card">
+        <div class="ficha-card-title">DATOS VEHÍCULO</div>
+        <div class="ficha-fields-2col">
+          <div class="ficha-field"><span class="ficha-field-label">Marca</span><span class="ficha-field-value">{{
+              vehiculo.marca || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Modelo</span><span class="ficha-field-value">{{
+              vehiculo.modelo || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Bastidor</span><span class="ficha-field-value mono"
+              style="font-size:11px;">{{ vehiculo.bastidor || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">F. Matriculación</span><span
+              class="ficha-field-value mono">{{ vehiculo.fecha_mat || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Fecha ITV</span><span
+              class="ficha-field-value mono">{{ vehiculo.itv || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Flota</span><span class="ficha-field-value"><span
+                class="coop-label" [ngClass]="coopClass(vehiculo.destinado_a)">{{ vehiculo.destinado_a || '—'
+                }}</span></span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Arrendador</span><span class="ficha-field-value">{{
+              vehiculo.propiedad || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Situación</span><span class="ficha-field-value"><span
+                class="badge" [ngClass]="badgeClass(vehiculo.situacion)">{{ vehiculo.situacion || '—' }}</span></span>
+          </div>
+          <div class="ficha-field"><span class="ficha-field-label">F. Incorporación</span><span
+              class="ficha-field-value mono">{{ vehiculo.fecha_incorporacion || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Observaciones</span><span class="ficha-field-value"
+              style="font-size:11.5px;">{{ vehiculo.observaciones || '—' }}</span></div>
+        </div>
+      </div>
+
+      <!-- GPS Y TACÓGRAFO -->
+      <div class="ficha-card" style="margin-top:12px;">
+        <div class="ficha-card-title">GPS Y TACÓGRAFO</div>
+        <div class="ficha-fields-2col">
+          <div class="ficha-field"><span class="ficha-field-label">Próx. Inspección Tacógrafo</span><span
+              class="ficha-field-value">{{ vehiculo.tacografo || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Descarga Tacógrafo</span><span
+              class="ficha-field-value">—</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Kilómetros</span><span
+              class="ficha-field-value">—</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Último Mantenimiento</span><span
+              class="ficha-field-value">—</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COL DERECHA -->
+    <div class="ficha-col">
+
+      <!-- CONDUCTOR ACTUAL -->
+      <div class="ficha-card">
+        <div class="ficha-card-title">CONDUCTOR ACTUAL</div>
+        <div *ngIf="vehiculo.conductor_actual && vehiculo.tipo_conductor === 'actual'; else sinConductor">
+          <div class="ficha-fields-2col">
+            <div class="ficha-field" style="grid-column:span 2;">
+              <span class="ficha-field-label">Conductor</span>
+              <a [routerLink]="['/conductores', vehiculo.conductor_actual_id]" class="link-conductor"
+                style="font-size:15px;">
+                {{ vehiculo.conductor_actual }}
+              </a>
+            </div>
+            <div class="ficha-field"><span class="ficha-field-label">Tlno.</span><span class="ficha-field-value">{{
+                conductorDetalle?.movil || '—' }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Email</span><span class="ficha-field-value"
+                style="font-size:11.5px;">{{ conductorDetalle?.email || '—' }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Gestor</span><span class="ficha-field-value"><span
+                  class="gestor-badge" *ngIf="conductorDetalle?.gestor">{{ conductorDetalle.gestor }}</span><span
+                  *ngIf="!conductorDetalle?.gestor">—</span></span></div>
+          </div>
+        </div>
+        <ng-template #sinConductor>
+          <div class="ficha-fields-2col">
+            <div class="ficha-field">
+              <span class="ficha-field-label">Conductor</span>
+              <span class="ficha-field-value" style="color:#8a96c4;">Sin Conductor</span>
+            </div>
+            <div class="ficha-field">
+              <span class="ficha-field-label">Último</span>
+              <span class="ficha-field-value">
+                <a *ngIf="ultimoConductor?.cliente_id" [routerLink]="['/conductores', ultimoConductor.cliente_id]"
+                  class="link-conductor">{{ nombreUltimoConductor() }}</a>
+                <span *ngIf="!ultimoConductor?.cliente_id">{{ nombreUltimoConductor() }}</span>
+              </span>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- SEGUROS -->
+      <div class="ficha-card" style="margin-top:12px;">
+        <div class="ficha-card-title-tabs">
+          <span class="ficha-card-title" style="margin-bottom:0;">SEGUROS</span>
+          <div class="seguro-tabs">
+            <button class="seguro-tab" [class.active]="activeSeguroTab==='circulacion'"
+              (click)="activeSeguroTab='circulacion'">Circulación</button>
+            <button class="seguro-tab" [class.active]="activeSeguroTab==='asistencia'"
+              (click)="activeSeguroTab='asistencia'">Asistencia</button>
+            <button class="seguro-tab" [class.active]="activeSeguroTab==='danios'"
+              (click)="activeSeguroTab='danios'">Daños</button>
+          </div>
+        </div>
+        <ng-container *ngIf="activeSeguroTab==='circulacion'">
+          <div *ngIf="seguroCirculacion; else sinSeguro" class="ficha-fields-2col" style="margin-top:12px;">
+            <div class="ficha-field"><span class="ficha-field-label">Póliza</span><span
+                class="ficha-field-value mono">{{ seguroCirculacion.poliza }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Corredor</span><span class="ficha-field-value">{{
+                seguroCirculacion.corredor }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Tomador</span><span class="ficha-field-value">{{
+                seguroCirculacion.tomador }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Aseguradora</span><span
+                class="ficha-field-value">{{ resolveAseguradora(seguroCirculacion.aseguradora) }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Garantías</span><span class="ficha-field-value">{{
+                seguroCirculacion.garantias || '—' }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">F. Vencimiento</span><span
+                class="ficha-field-value mono">{{ seguroCirculacion.vencimiento }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Ámbito</span><span class="ficha-field-value">{{
+                seguroCirculacion.ambito }}</span></div>
+          </div>
+          <ng-template #sinSeguro>
+            <div class="ficha-empty">Sin seguro de circulación</div>
+          </ng-template>
+        </ng-container>
+        <ng-container *ngIf="activeSeguroTab==='asistencia'">
+          <div *ngIf="seguroAsistencia; else sinSeguro2" class="ficha-fields-2col" style="margin-top:12px;">
+            <div class="ficha-field"><span class="ficha-field-label">Póliza</span><span
+                class="ficha-field-value mono">{{ seguroAsistencia.poliza }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Corredor</span><span class="ficha-field-value">{{
+                seguroAsistencia.corredor }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Tomador</span><span class="ficha-field-value">{{
+                seguroAsistencia.tomador }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Aseguradora</span><span
+                class="ficha-field-value">{{ resolveAseguradora(seguroAsistencia.aseguradora) }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">F. Vencimiento</span><span
+                class="ficha-field-value mono">{{ seguroAsistencia.vencimiento }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Ámbito</span><span class="ficha-field-value">{{
+                seguroAsistencia.ambito }}</span></div>
+          </div>
+          <ng-template #sinSeguro2>
+            <div class="ficha-empty">Sin seguro de asistencia</div>
+          </ng-template>
+        </ng-container>
+        <ng-container *ngIf="activeSeguroTab==='danios'">
+          <div *ngIf="seguroDanios; else sinSeguro3" class="ficha-fields-2col" style="margin-top:12px;">
+            <div class="ficha-field"><span class="ficha-field-label">Póliza</span><span
+                class="ficha-field-value mono">{{ seguroDanios.poliza }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Corredor</span><span class="ficha-field-value">{{
+                seguroDanios.corredor }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">Aseguradora</span><span
+                class="ficha-field-value">{{ resolveAseguradora(seguroDanios.aseguradora) }}</span></div>
+            <div class="ficha-field"><span class="ficha-field-label">F. Vencimiento</span><span
+                class="ficha-field-value mono">{{ seguroDanios.vencimiento }}</span></div>
+          </div>
+          <ng-template #sinSeguro3>
+            <div class="ficha-empty">Sin seguro de daños</div>
+          </ng-template>
+        </ng-container>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DATOS VEHÍCULO: garantía y mantenimiento (ancho completo) -->
+  <div class="ficha-card" style="margin-bottom:12px;">
+    <div class="ficha-card-title">DATOS VEHÍCULO</div>
+
+    <!-- Fila 1: Km + Equipamiento + F. Matriculación -->
+    <div class="ficha-fields-3col" style="margin-bottom:14px;">
+      <div class="ficha-field"><span class="ficha-field-label">Kilómetros</span><span class="ficha-field-value mono">{{ vehiculo.kilometros || '—' }}</span></div>
+      <div class="ficha-field"><span class="ficha-field-label">Equipamiento</span><span class="ficha-field-value" style="font-size:11.5px;">{{ vehiculo.equipamiento || '—' }}</span></div>
+      <div class="ficha-field"><span class="ficha-field-label">F. Matriculación</span><span class="ficha-field-value mono">{{ garantias?.fecha_matriculacion || vehiculo.fecha_mat || '—' }}</span></div>
+    </div>
+
+    <div class="ficha-group-label">Garantía</div>
+    <div class="ficha-fields-3col" style="margin-bottom:14px;">
+      <div class="ficha-field"><span class="ficha-field-label">Tipo garantía</span><span class="ficha-field-value">{{ garantias?.tipo_garantia || vehiculo.garantia || '—' }}</span></div>
+      <div class="ficha-field"><span class="ficha-field-label">Fin de garantía</span><span class="ficha-field-value mono">{{ garantias?.fecha_fin_garantia || vehiculo.fecha_fin_garantia || '—' }}</span></div>
+      <div class="ficha-field"><span class="ficha-field-label">Km fin garantía</span><span class="ficha-field-value mono">{{ garantias?.km_fin_garantia || vehiculo.km_fin_garantia || '—' }}</span></div>
+    </div>
+
+    <div class="ficha-group-label">Mantenimiento</div>
+    <div class="ficha-fields-3col">
+      <div class="ficha-field"><span class="ficha-field-label">F. fin Mto.</span><span class="ficha-field-value mono">{{ garantias?.fecha_fin_mto || vehiculo.fecha_fin_mto || '—' }}</span></div>
+      <div class="ficha-field"><span class="ficha-field-label">Km fin Mto.</span><span class="ficha-field-value mono">{{ garantias?.km_fin_mto || vehiculo.km_fin_mto || '—' }}</span></div>
+      <div class="ficha-field">
+        <span class="ficha-field-label">Precio Mto.</span>
+        <span class="ficha-field-value">
+          <ng-container *ngIf="garantias?.precio_mto != null; else precioPorDefecto">
+            {{ garantias.precio_mto === '0' ? '0 €' : garantias.precio_mto + ' €' }}
+          </ng-container>
+          <ng-template #precioPorDefecto>{{ vehiculo.precio_mto ? vehiculo.precio_mto + ' €' : '—' }}</ng-template>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTRATOS -->
+  <div class="ficha-card" style="margin-top:12px;">
+    <div class="ficha-card-title">CONTRATOS</div>
+    <div class="ficha-fields-4col" style="margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid #eef1fb;">
+      <span style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase;">Contrato Socio</span>
+      <span style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase;">Fecha Inicio</span>
+      <span style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase;">Fecha Fin</span>
+      <span style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase;">Tipo Contrato</span>
+    </div>
+    <div *ngIf="contrato" class="ficha-fields-4col">
+      <span class="mono" style="font-weight:700; color:#0a0f2c;">{{ contrato.num_contrato }}</span>
+      <span class="mono" style="color:#374151;">{{ formatFecha(contrato.fecha_inicio) }}</span>
+      <span class="mono" style="color:#374151;">{{ formatFecha(contrato.fecha_fin) || '—' }}</span>
+      <span><span class="badge" [ngClass]="badgeClass(contrato.tipo_contrato)">{{ contrato.tipo_contrato
+          }}</span></span>
+    </div>
+    <div *ngIf="!contrato" class="ficha-empty">Sin contrato registrado</div>
+
+    <!-- CONTRATO FINANCIERA — misma estructura que Contrato Socio -->
+    <div class="ficha-fields-4col"
+      style="margin-top:16px; margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid #eef1fb;">
+      <span style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase;">Contrato Financiera</span>
+      <span style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase;">Fecha Inicio</span>
+      <span style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase;">Fecha Fin</span>
+      <span style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase;">Tipo Contrato</span>
+    </div>
+    <div *ngIf="financiera" class="ficha-fields-4col">
+      <span class="mono" style="font-weight:700; color:#0a0f2c;">{{ financiera.num_contrato }}</span>
+      <span class="mono" style="color:#374151;">{{ formatFecha(financiera.fecha_inicio) || '—' }}</span>
+      <span class="mono" style="color:#374151;">{{ formatFecha(financiera.fecha_fin) || '—' }}</span>
+      <span><span class="badge" [ngClass]="badgeClass(financiera.tipo)">{{ financiera.tipo }}</span></span>
+    </div>
+    <div *ngIf="!financiera" class="ficha-empty">Sin contrato financiero registrado</div>
+  </div>
+
+  <!-- HISTÓRICO SOCIOS -->
+  <div class="ficha-card" style="margin-top:12px;">
+    <div class="ficha-card-title">HISTÓRICO SOCIOS</div>
+    <div *ngIf="historialConductores.length > 0; else sinHistorial">
+      <div class="dc-table-wrapper" style="margin-top:4px;">
+      <table class="dc-table">
+        <thead>
+          <tr>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Nombre</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let h of historialConductores">
+            <td class="mono" style="font-size:12px; color:#374151;">{{ formatFecha(h.fecha_inicio) }}</td>
+            <td class="mono" style="font-size:12px; color:#374151;">{{ formatFecha(h.fecha_fin) || '—' }}</td>
+            <td>
+              <a *ngIf="h.cliente_id" [routerLink]="['/conductores', h.cliente_id]" class="link-conductor">{{ h.nombre
+                }}</a>
+              <span *ngIf="!h.cliente_id">{{ h.nombre }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <ng-template #sinHistorial>
+      <div class="ficha-empty">Sin histórico de conductores</div>
+    </ng-template>
+  </div>
+
+</div>

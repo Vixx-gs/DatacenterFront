@@ -1,0 +1,19 @@
+<header class="topbar">
+  <button class="hamburger" (click)="toggleNav()" aria-label="Menú">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-date mono">{{ today }}</div>
+  <div class="v-divider"></div>
+  <div class="topbar-coops">
+    <div class="coop-pill" *ngFor="let c of coops" [style.border-color]="c.color + '66'">
+      <span class="coop-pip" [style.background]="c.color"></span>
+      <span class="coop-name mono">{{ c.name }}</span>
+      <span class="coop-count mono">{{ c.count }}</span>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,230 @@
+<div class="page-header" style="display:flex; align-items:center; justify-content:space-between;">
+  <div>
+    <div class="page-title">Socios</div>
+    <div class="page-subtitle">
+      Total {{ mostrarExSocios ? filteredEx.length : filtered.length }} registros
+      <span *ngIf="hayFiltroFecha"
+        style="margin-left:8px; font-size:11px; background:#eff6ff; color:#2563eb; padding:2px 8px; border-radius:10px;">Filtro
+        por fecha activo</span>
+    </div>
+  </div>
+  <div style="display:flex; gap:8px; align-items:center;">
+  <button class="btn btn-ghost btn-sm" (click)="exportarCSV()" title="Exportar CSV">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    CSV
+  </button>
+  <button class="btn btn-sm"
+    [ngStyle]="mostrarExSocios ? {'background':'#7c3aed','color':'#fff','border':'1px solid #7c3aed'} : {'background':'#f5f3ff','color':'#7c3aed','border':'1px solid #ddd6fe'}"
+    (click)="toggleExSocios()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      style="margin-right:5px; vertical-align:middle;">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <line x1="23" y1="11" x2="17" y2="11" />
+      <line x1="20" y1="8" x2="20" y2="14" />
+    </svg>
+    {{ mostrarExSocios ? 'Ver socios' : 'Ver ex-socios' }}
+    <span style="border-radius:10px;padding:0 6px;font-size:10px;margin-left:4px;"
+      [ngStyle]="mostrarExSocios ? {'background':'#fff','color':'#7c3aed'} : {'background':'#7c3aed','color':'#fff'}">
+      {{ mostrarExSocios ? filtered.length : filteredEx.length }}
+    </span>
+  </button>
+</div>
+</div>
+
+<div *ngIf="!mostrarExSocios">
+  <div class="toolbar">
+    <div class="search-wrapper">
+      <span class="search-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+      </span>
+      <input class="dc-input dc-input-search" placeholder="Buscar nombre, NIF..."
+        (input)="onSearch($any($event.target).value)" />
+    </div>
+    <div class="v-divider"></div>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterEmpresa === 'TODOS'"
+      [style.background]="filterEmpresa === 'TODOS' ? '#6b7280' : ''"
+      [style.color]="filterEmpresa === 'TODOS' ? '#fff' : ''"
+      [style.border-color]="filterEmpresa === 'TODOS' ? '#6b7280' : ''"
+      (click)="setFilterEmpresa('TODOS')">TODOS</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterEmpresa === 'TRANSCOOP'"
+      [style.background]="filterEmpresa === 'TRANSCOOP' ? '#0d3b3e' : ''"
+      [style.color]="filterEmpresa === 'TRANSCOOP' ? '#fff' : ''"
+      [style.border-color]="filterEmpresa === 'TRANSCOOP' ? '#0d3b3e' : ''"
+      (click)="setFilterEmpresa('TRANSCOOP')">TRANSCOOP</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterEmpresa === 'ECOTRANSPORTE'"
+      [style.background]="filterEmpresa === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+      [style.color]="filterEmpresa === 'ECOTRANSPORTE' ? '#fff' : ''"
+      [style.border-color]="filterEmpresa === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+      (click)="setFilterEmpresa('ECOTRANSPORTE')">ECOTRANSPORTE</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterEmpresa === 'CENTRALCOOP'"
+      [style.background]="filterEmpresa === 'CENTRALCOOP' ? '#d4580a' : ''"
+      [style.color]="filterEmpresa === 'CENTRALCOOP' ? '#fff' : ''"
+      [style.border-color]="filterEmpresa === 'CENTRALCOOP' ? '#d4580a' : ''"
+      (click)="setFilterEmpresa('CENTRALCOOP')">CENTRALCOOP</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterEmpresa === 'SITTRANS'"
+      [style.background]="filterEmpresa === 'SITTRANS' ? '#b45309' : ''"
+      [style.color]="filterEmpresa === 'SITTRANS' ? '#fff' : ''"
+      [style.border-color]="filterEmpresa === 'SITTRANS' ? '#b45309' : ''"
+      (click)="setFilterEmpresa('SITTRANS')">SITTRANS</button>
+    <div class="v-divider"></div>
+    <span style="font-size:11px; color:#6b7280;">Desde</span>
+    <input type="date" [(ngModel)]="desdeVal" (ngModelChange)="applyFiltros()"
+      style="padding:4px 8px; border:1px solid #e5e7eb; border-radius:7px; font-size:11px; color:#374151; background:#f9fafb;"
+      [style.border-color]="desdeVal ? '#2563eb' : '#e5e7eb'" />
+    <span style="font-size:11px; color:#9ca3af;">→</span>
+    <input type="date" [(ngModel)]="hastaVal" (ngModelChange)="applyFiltros()"
+      style="padding:4px 8px; border:1px solid #e5e7eb; border-radius:7px; font-size:11px; color:#374151; background:#f9fafb;"
+      [style.border-color]="hastaVal ? '#2563eb' : '#e5e7eb'" />
+    <button *ngIf="desdeVal || hastaVal" (click)="desdeVal=''; hastaVal=''; applyFiltros()"
+      style="padding:3px 8px; border:1px solid #e5e7eb; border-radius:6px; font-size:11px; color:#6b7280; background:#f9fafb; cursor:pointer;">✕</button>
+  </div>
+
+  <div class="dc-table-wrapper">
+    <table class="dc-table" style="table-layout:fixed;">
+      <colgroup>
+        <col style="width:18%">
+        <col style="width:9%">
+        <col style="width:8%">
+        <col style="width:10%">
+        <col style="width:17%">
+        <col style="width:8%">
+        <col style="width:12%">
+        <col style="width:9%">
+        <col style="width:9%">
+        <col *ngIf="hayFiltroFecha" style="width:9%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>NIF</th>
+          <th>Nº Tarjeta</th>
+          <th>Móvil</th>
+          <th>Email</th>
+          <th>Gestor</th>
+          <th>Empresa</th>
+          <th>Vehículo</th>
+          <th style="cursor:pointer; user-select:none;" (click)="toggleSort()">
+            F. Alta
+            <span style="margin-left:4px; font-size:10px;">
+              {{ sortDir === 'asc' ? '↑' : sortDir === 'desc' ? '↓' : '↕' }}
+            </span>
+          </th>
+          <th *ngIf="hayFiltroFecha">F. Baja</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of filtered" (click)="irAFicha(c)" class="clickable-row"
+          [style.opacity]="c.fecha_baja ? '0.75' : '1'">
+          <td style="font-weight:600;" [style.color]="c.fecha_baja ? '#7c3aed' : '#0a0f2c'">{{ c.nombre }}</td>
+          <td class="mono" style="font-size:11.5px; color:#111827;">{{ c.nif }}</td>
+          <td class="mono" style="font-size:11.5px; color:#374151;">{{ c.num_tarj_conductor || '—' }}</td>
+          <td class="mono" style="font-size:12px; color:#111827;">{{ c.movil || '—' }}</td>
+          <td style="font-size:11.5px; color:#111827; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" [title]="c.email">{{ c.email || '—' }}</td>
+          <td><span class="gestor-badge" *ngIf="c.gestor && c.gestor !== '-'">{{ c.gestor }}</span><span
+              *ngIf="!c.gestor || c.gestor === '-'" style="color:#8a96c4;">—</span></td>
+          <td><span class="coop-label" [ngClass]="coopClass(c.empresa)">{{ c.empresa }}</span></td>
+          <td (click)="$event.stopPropagation()" style="white-space:nowrap;">
+            <ng-container *ngFor="let v of getVehiculos(c)">
+              <a [routerLink]="['/vehiculos', v]" style="text-decoration:none; margin-right:4px;">
+                <span class="matricula"
+                  style="cursor:pointer; border-color:#2563eb; color:#2563eb; display:inline-block;">{{ v }}</span>
+              </a>
+            </ng-container>
+            <span *ngIf="getVehiculos(c).length === 0" style="color:#8a96c4;">—</span>
+          </td>
+          <td class="mono" style="font-size:12px; color:#374151;">{{ formatFecha(c.fecha_prevista) || '—' }}
+          </td>
+          <td *ngIf="hayFiltroFecha" class="mono" style="font-size:12px; color:#dc2626;">{{ formatFecha(c.fecha_baja) ||
+            '—' }}</td>
+        </tr>
+        <tr *ngIf="filtered.length === 0">
+          <td [attr.colspan]="hayFiltroFecha ? 10 : 9" style="text-align:center; color:#6b7280; padding:24px;">Sin
+            resultados</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div *ngIf="mostrarExSocios" style="margin-top:16px;">
+  <div class="toolbar" style="margin-bottom:12px;">
+    <div class="search-wrapper">
+      <span class="search-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+      </span>
+      <input class="dc-input dc-input-search" placeholder="Buscar ex-socio, NIF..."
+        (input)="onSearchEx($any($event.target).value)" />
+    </div>
+    <div class="v-divider"></div>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterEmpresaEx === 'TODOS'"
+      [style.background]="filterEmpresaEx === 'TODOS' ? '#6b7280' : ''"
+      [style.color]="filterEmpresaEx === 'TODOS' ? '#fff' : ''"
+      [style.border-color]="filterEmpresaEx === 'TODOS' ? '#6b7280' : ''"
+      (click)="setFilterEmpresaEx('TODOS')">TODOS</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterEmpresaEx === 'TRANSCOOP'"
+      [style.background]="filterEmpresaEx === 'TRANSCOOP' ? '#0d3b3e' : ''"
+      [style.color]="filterEmpresaEx === 'TRANSCOOP' ? '#fff' : ''"
+      [style.border-color]="filterEmpresaEx === 'TRANSCOOP' ? '#0d3b3e' : ''"
+      (click)="setFilterEmpresaEx('TRANSCOOP')">TRANSCOOP</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterEmpresaEx === 'ECOTRANSPORTE'"
+      [style.background]="filterEmpresaEx === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+      [style.color]="filterEmpresaEx === 'ECOTRANSPORTE' ? '#fff' : ''"
+      [style.border-color]="filterEmpresaEx === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+      (click)="setFilterEmpresaEx('ECOTRANSPORTE')">ECOTRANSPORTE</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterEmpresaEx === 'CENTRALCOOP'"
+      [style.background]="filterEmpresaEx === 'CENTRALCOOP' ? '#d4580a' : ''"
+      [style.color]="filterEmpresaEx === 'CENTRALCOOP' ? '#fff' : ''"
+      [style.border-color]="filterEmpresaEx === 'CENTRALCOOP' ? '#d4580a' : ''"
+      (click)="setFilterEmpresaEx('CENTRALCOOP')">CENTRALCOOP</button>
+  </div>
+  <div class="dc-table-wrapper">
+    <table class="dc-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>NIF</th>
+          <th>Móvil</th>
+          <th>Email</th>
+          <th>Empresa</th>
+          <th>Gestor</th>
+          <th>F. Alta</th>
+          <th>F. Baja</th>
+          <th>Vehículo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of filteredEx" (click)="irAFicha(c)" class="clickable-row" style="opacity:0.75;">
+          <td style="font-weight:600; color:#4c1d95;">{{ c.nombre }}</td>
+          <td class="mono" style="font-size:11.5px; color:#374151;">{{ c.nif }}</td>
+          <td class="mono" style="font-size:12px; color:#374151;">{{ c.movil || '—' }}</td>
+          <td style="font-size:11.5px; color:#374151;">{{ c.email || '—' }}</td>
+          <td><span class="coop-label" [ngClass]="coopClass(c.empresa)">{{ c.empresa }}</span></td>
+          <td><span class="gestor-badge" *ngIf="c.gestor && c.gestor !== '-'">{{ c.gestor }}</span><span
+              *ngIf="!c.gestor || c.gestor === '-'" style="color:#8a96c4;">—</span></td>
+          <td class="mono" style="font-size:12px; color:#374151;">{{ formatFecha(c.fecha_prevista) || '—' }}
+          </td>
+          <td class="mono" style="font-size:12px; color:#dc2626;">{{ formatFecha(c.fecha_baja) || '—' }}</td>
+          <td (click)="$event.stopPropagation()" style="white-space:nowrap;">
+            <ng-container *ngFor="let v of getVehiculos(c)">
+              <a [routerLink]="['/vehiculos', v]" style="text-decoration:none; margin-right:4px;">
+                <span class="matricula"
+                  style="cursor:pointer; border-color:#7c3aed; color:#7c3aed; display:inline-block;">{{ v }}</span>
+              </a>
+            </ng-container>
+            <span *ngIf="getVehiculos(c).length === 0" style="color:#8a96c4;">—</span>
+          </td>
+        </tr>
+        <tr *ngIf="filteredEx.length === 0">
+          <td colspan="9" style="text-align:center; color:#6b7280; padding:24px;">Sin ex-socios registrados</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

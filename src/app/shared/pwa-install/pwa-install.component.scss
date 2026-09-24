@@ -1,0 +1,102 @@
+.pwa-banner {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 480px;
+  background: #0f2444;
+  border: 1px solid #1e4080;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  z-index: 9999;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.pwa-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.pwa-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: rgba(94, 234, 212, 0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pwa-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.pwa-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 2px;
+}
+
+.pwa-desc {
+  font-size: 11.5px;
+  color: #6a9fd8;
+  line-height: 1.4;
+
+  .ios-share {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    color: #5eead4;
+  }
+
+  strong {
+    color: #c9d9f0;
+    font-weight: 600;
+  }
+}
+
+.pwa-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.pwa-btn-install {
+  background: #5eead4;
+  color: #0f2444;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:active { opacity: 0.85; }
+}
+
+.pwa-btn-close {
+  background: transparent;
+  border: none;
+  color: #3a6090;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+
+  &:active { background: rgba(255,255,255,0.08); }
+}

@@ -1,0 +1,294 @@
+﻿<div class="inicio-wrapper">
+
+  <div class="page-header" style="margin-bottom:24px;">
+    <div>
+      <div class="page-title">DATA CENTER</div>
+      <div class="page-subtitle">Panel de control · Gestion de flota y conductores</div>
+    </div>
+  </div>
+
+  <!-- KPI CARDS COOPERATIVAS -->
+  <div class="kpi-row">
+    <div class="kpi-card" *ngFor="let c of coops; let i = index" [style.border-top-color]="c.color"
+      [style.animation-delay]="(i * 0.08) + 's'">
+      <div class="kpi-top">
+        <span class="kpi-name">{{ c.name }}</span>
+        <span class="kpi-dot" [style.background]="c.color"></span>
+      </div>
+      <div class="kpi-value" [style.color]="c.color">{{ c.count }}</div>
+      <div class="kpi-label">socios activos</div>
+      <div class="kpi-bar">
+        <div class="kpi-bar-fill" [style.width]="progressWidth(c.count)" [style.background]="c.color"></div>
+      </div>
+    </div>
+    <div class="kpi-card kpi-card-total" style="animation-delay:0.24s;">
+      <div class="kpi-top"><span class="kpi-name">TOTAL</span></div>
+      <div class="kpi-value" style="color:#0a0f2c;">{{ total }}</div>
+      <div class="kpi-label">socios cooperativistas</div>
+      <div class="kpi-bar">
+        <div class="kpi-bar-fill" style="width:100%; background: linear-gradient(90deg, #0d3b3e, #18a04c, #d4580a);">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT 2 COLUMNAS: GRÁFICO + RESUMEN -->
+  <div class="charts-two-col" style="display:flex; gap:20px; margin-bottom:20px; align-items:stretch;">
+
+    <!-- GRÁFICO (izquierda) -->
+    <div class="chart-card" style="flex:1; min-width:0; animation-delay:0.28s;">
+      <div
+        style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+        <div>
+          <div class="chart-title" style="margin-bottom:2px;">Evolución de socios</div>
+          <div class="chart-subtitle">{{ graficoTitulo }}</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <!-- Botones modo -->
+          <div style="display:flex; border:1px solid #e5e7eb; border-radius:8px; overflow:hidden;">
+            <button
+              style="padding:4px 10px; font-size:11px; font-weight:600; border:none; cursor:pointer; transition:all 0.15s;"
+              [style.background]="graficoModo==='dia' ? '#2563eb' : '#f9fafb'"
+              [style.color]="graficoModo==='dia' ? '#fff' : '#374151'" (click)="setGraficoModo('dia')">Días</button>
+            <button
+              style="padding:4px 10px; font-size:11px; font-weight:600; border:none; cursor:pointer; transition:all 0.15s;"
+              [style.background]="graficoModo==='mes' ? '#2563eb' : '#f9fafb'"
+              [style.color]="graficoModo==='mes' ? '#fff' : '#374151'" (click)="setGraficoModo('mes')">Meses</button>
+            <button
+              style="padding:4px 10px; font-size:11px; font-weight:600; border:none; cursor:pointer; transition:all 0.15s;"
+              [style.background]="graficoModo==='anio' ? '#2563eb' : '#f9fafb'"
+              [style.color]="graficoModo==='anio' ? '#fff' : '#374151'" (click)="setGraficoModo('anio')">Años</button>
+          </div>
+          <!-- Selector mes (solo en modo dia) -->
+          <select *ngIf="graficoModo==='dia'" [(ngModel)]="graficoMes" (ngModelChange)="loadGrafico()"
+            style="padding:4px 8px; border:1px solid #e5e7eb; border-radius:8px; font-size:11px; color:#374151; background:#f9fafb;">
+            <option *ngFor="let m of meses; let i = index" [value]="i+1">{{ m }}</option>
+          </select>
+          <!-- Selector año (en modo dia y mes) -->
+          <select *ngIf="graficoModo!=='anio'" [(ngModel)]="graficoAnio" (ngModelChange)="loadGrafico()"
+            style="padding:4px 8px; border:1px solid #e5e7eb; border-radius:8px; font-size:11px; color:#374151; background:#f9fafb;">
+            <option *ngFor="let a of aniosDisponibles" [value]="a">{{ a }}</option>
+          </select>
+          <!-- Selector cooperativa -->
+          <select [(ngModel)]="graficoCooperativa" (ngModelChange)="loadGrafico()"
+            style="padding:4px 8px; border:1px solid #e5e7eb; border-radius:8px; font-size:11px; color:#374151; background:#f9fafb;">
+            <option *ngFor="let c of coopOpciones" [value]="c">{{ c === 'TODAS' ? 'Todas' : c }}</option>
+          </select>
+        </div>
+      </div>
+      <canvas #graficoCanvas style="width:100%; height:220px; display:block;"></canvas>
+    </div>
+
+    <!-- RESUMEN GENERAL (derecha) -->
+    <div class="chart-card" style="width:280px; flex-shrink:0; animation-delay:0.32s;">
+      <div class="chart-title">Resumen general</div>
+      <div class="chart-subtitle">Datos actuales</div>
+      <div class="mini-stats">
+        <div class="mini-stat" *ngFor="let s of miniStats">
+          <div class="mini-stat-icon" [style.background]="s.color + '18'" [style.color]="s.color">
+            <svg *ngIf="s.label === 'Total vehiculos'" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.8">
+              <rect x="1" y="3" width="15" height="13" />
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+              <circle cx="5.5" cy="18.5" r="2.5" />
+              <circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+            <svg *ngIf="s.label === 'Socios'" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.8">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 00-3-3.87" />
+              <path d="M16 3.13a4 4 0 010 7.75" />
+            </svg>
+            <svg *ngIf="s.label === 'En taller'" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.8">
+              <path
+                d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+            </svg>
+          </div>
+          <div class="mini-stat-info">
+            <div class="mini-stat-value" [style.color]="s.color">{{ s.value }}</div>
+            <div class="mini-stat-label">{{ s.label }}</div>
+          </div>
+          <div class="mini-stat-badge" [style.background]="s.color + '15'" [style.color]="s.color">{{ s.sub }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TARJETA ALTAS -->
+  <div class="altas-bajas-card altas-card" style="margin-bottom:16px;">
+    <div class="ab-header" (click)="toggleAltas()">
+      <div class="ab-left">
+        <div class="ab-icon" style="background:#dcfce7; color:#16a34a;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <line x1="19" y1="8" x2="19" y2="14" />
+            <line x1="22" y1="11" x2="16" y2="11" />
+          </svg>
+        </div>
+        <div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:32px; font-weight:800; color:#16a34a; font-family:'JetBrains Mono',monospace;">{{
+              sociosAltas.length }}</span>
+            <span
+              style="background:#16a34a; color:#fff; font-size:9px; font-weight:700; padding:2px 8px; border-radius:20px; letter-spacing:0.06em;">ALTAS</span>
+          </div>
+          <span style="font-size:12px; color:#6b7280;">socios dados de alta</span>
+        </div>
+      </div>
+      <div class="ab-filters" (click)="$event.stopPropagation()">
+        <button class="ab-filter-btn" [class.active-verde]="rangoAltas==='mes'" (click)="setRangoAltas('mes')">Último
+          mes</button>
+        <button class="ab-filter-btn" [class.active-verde]="rangoAltas==='semana'"
+          (click)="setRangoAltas('semana')">Última semana</button>
+        <select class="ab-date-input" [(ngModel)]="mesAltas" (ngModelChange)="onMesAltasChange()"
+          [style.border-color]="rangoAltas==='mes_selector' ? '#16a34a' : '#e5e7eb'"
+          [style.color]="rangoAltas==='mes_selector' ? '#16a34a' : '#374151'">
+          <option *ngFor="let m of meses; let i = index" [value]="i+1">{{ m }}</option>
+        </select>
+        <select class="ab-date-input" [(ngModel)]="anioAltas" (ngModelChange)="onAnioAltasChange()"
+          [style.border-color]="rangoAltas==='anio_selector' ? '#16a34a' : '#e5e7eb'"
+          [style.color]="rangoAltas==='anio_selector' ? '#16a34a' : '#374151'">
+          <option *ngFor="let a of aniosDisponibles" [value]="a">{{ a }}</option>
+        </select>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"
+        [style.transform]="mostrarAltas ? 'rotate(180deg)' : 'rotate(0deg)'"
+        style="transition:transform 0.2s; cursor:pointer;">
+        <polyline points="6 9 12 15 18 9" />
+      </svg>
+    </div>
+    <div *ngIf="mostrarAltas" style="margin-top:12px;">
+      <div class="dc-table-wrapper">
+        <table class="dc-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>NIF</th>
+              <th>Móvil</th>
+              <th>Empresa</th>
+              <th>Gestor</th>
+              <th>Fecha Alta</th>
+              <th>Vehículo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of sociosAltas" (click)="irAFicha(c.id)" class="clickable-row">
+              <td style="font-weight:700; color:#0a0f2c;">{{ c.nombre }}</td>
+              <td class="mono" style="font-size:11.5px; color:#374151;">{{ c.nif }}</td>
+              <td class="mono" style="font-size:12px; color:#374151;">{{ c.movil || '—' }}</td>
+              <td><span class="coop-label"
+                  [ngClass]="c.empresa === 'TRANSCOOP' ? 'coop-transcoop' : c.empresa === 'ECOTRANSPORTE' ? 'coop-ecotransporte' : 'coop-centralcoop'">{{
+                  c.empresa }}</span></td>
+              <td><span class="gestor-badge" *ngIf="c.gestor">{{ c.gestor }}</span><span *ngIf="!c.gestor"
+                  style="color:#8a96c4;">—</span></td>
+              <td class="mono" style="font-size:12px; color:#16a34a; font-weight:600;">{{ c.fecha_prevista ||
+                c.fecha_inicio }}</td>
+              <td (click)="$event.stopPropagation()">
+                <a *ngFor="let v of getVehiculos(c.vehiculo)" [routerLink]="['/vehiculos', v]"
+                  style="text-decoration:none; margin-right:4px;">
+                  <span class="matricula" style="border-color:#16a34a; color:#16a34a;">{{ v }}</span>
+                </a>
+                <span *ngIf="getVehiculos(c.vehiculo).length === 0" style="color:#8a96c4;">—</span>
+              </td>
+            </tr>
+            <tr *ngIf="sociosAltas.length === 0">
+              <td colspan="7" style="text-align:center; color:#6b7280; padding:20px;">Sin altas en el período
+                seleccionado</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TARJETA BAJAS -->
+  <div class="altas-bajas-card bajas-card" style="margin-bottom:20px;">
+    <div class="ab-header" (click)="toggleBajas()">
+      <div class="ab-left">
+        <div class="ab-icon" style="background:#fee2e2; color:#dc2626;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <line x1="22" y1="11" x2="16" y2="11" />
+          </svg>
+        </div>
+        <div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:32px; font-weight:800; color:#dc2626; font-family:'JetBrains Mono',monospace;">{{
+              sociosBajas.length }}</span>
+            <span
+              style="background:#dc2626; color:#fff; font-size:9px; font-weight:700; padding:2px 8px; border-radius:20px; letter-spacing:0.06em;">BAJAS</span>
+          </div>
+          <span style="font-size:12px; color:#6b7280;">socios dados de baja</span>
+        </div>
+      </div>
+      <div class="ab-filters" (click)="$event.stopPropagation()">
+        <button class="ab-filter-btn" [class.active-rojo]="rangoBajas==='mes'" (click)="setRangoBajas('mes')">Último
+          mes</button>
+        <button class="ab-filter-btn" [class.active-rojo]="rangoBajas==='semana'"
+          (click)="setRangoBajas('semana')">Última semana</button>
+        <select class="ab-date-input" [(ngModel)]="mesBajas" (ngModelChange)="onMesBajasChange()"
+          [style.border-color]="rangoBajas==='mes_selector' ? '#dc2626' : '#e5e7eb'"
+          [style.color]="rangoBajas==='mes_selector' ? '#dc2626' : '#374151'">
+          <option *ngFor="let m of meses; let i = index" [value]="i+1">{{ m }}</option>
+        </select>
+        <select class="ab-date-input" [(ngModel)]="anioBajas" (ngModelChange)="onAnioBajasChange()"
+          [style.border-color]="rangoBajas==='anio_selector' ? '#dc2626' : '#e5e7eb'"
+          [style.color]="rangoBajas==='anio_selector' ? '#dc2626' : '#374151'">
+          <option *ngFor="let a of aniosDisponibles" [value]="a">{{ a }}</option>
+        </select>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"
+        [style.transform]="mostrarBajas ? 'rotate(180deg)' : 'rotate(0deg)'"
+        style="transition:transform 0.2s; cursor:pointer;">
+        <polyline points="6 9 12 15 18 9" />
+      </svg>
+    </div>
+    <div *ngIf="mostrarBajas" style="margin-top:12px;">
+      <div class="dc-table-wrapper">
+        <table class="dc-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>NIF</th>
+              <th>Móvil</th>
+              <th>Empresa</th>
+              <th>Gestor</th>
+              <th>Fecha Baja</th>
+              <th>Vehículo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of sociosBajas" (click)="irAFicha(c.id)" class="clickable-row">
+              <td style="font-weight:700; color:#0a0f2c;">{{ c.nombre }}</td>
+              <td class="mono" style="font-size:11.5px; color:#374151;">{{ c.nif }}</td>
+              <td class="mono" style="font-size:12px; color:#374151;">{{ c.movil || '—' }}</td>
+              <td><span class="coop-label"
+                  [ngClass]="c.empresa === 'TRANSCOOP' ? 'coop-transcoop' : c.empresa === 'ECOTRANSPORTE' ? 'coop-ecotransporte' : 'coop-centralcoop'">{{
+                  c.empresa }}</span></td>
+              <td><span class="gestor-badge" *ngIf="c.gestor">{{ c.gestor }}</span><span *ngIf="!c.gestor"
+                  style="color:#8a96c4;">—</span></td>
+              <td class="mono" style="font-size:12px; color:#dc2626; font-weight:600;">{{ c.fecha_baja }}</td>
+              <td (click)="$event.stopPropagation()">
+                <a *ngFor="let v of getVehiculos(c.vehiculo)" [routerLink]="['/vehiculos', v]"
+                  style="text-decoration:none; margin-right:4px;">
+                  <span class="matricula" style="border-color:#dc2626; color:#dc2626;">{{ v }}</span>
+                </a>
+                <span *ngIf="getVehiculos(c.vehiculo).length === 0" style="color:#8a96c4;">—</span>
+              </td>
+            </tr>
+            <tr *ngIf="sociosBajas.length === 0">
+              <td colspan="7" style="text-align:center; color:#6b7280; padding:20px;">Sin bajas en el período
+                seleccionado</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,189 @@
+<div class="page-header" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+    <div>
+        <div class="page-title">Tacógrafo</div>
+        <div class="page-subtitle">Control de inspecciones de tacógrafo de la flota</div>
+    </div>
+    <button class="btn btn-ghost btn-sm" (click)="exportarCSV()" title="Exportar CSV">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        CSV
+    </button>
+</div>
+
+<div *ngIf="error" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:13px; font-weight:600;">
+    Error al cargar datos del tacógrafo. Comprueba que el servidor esté activo y reiniciado.
+</div>
+
+<div class="toolbar" style="margin-bottom:16px;">
+    <div class="search-wrapper">
+        <span class="search-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+        </span>
+        <input class="dc-input dc-input-search" placeholder="Buscar matrícula, marca, conductor..."
+            (input)="onSearch($any($event.target).value)" />
+    </div>
+    <div class="v-divider"></div>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'TODOS'"
+        [style.background]="filterCoop === 'TODOS' ? '#6b7280' : ''"
+        [style.color]="filterCoop === 'TODOS' ? '#fff' : ''"
+        [style.border-color]="filterCoop === 'TODOS' ? '#6b7280' : ''" (click)="setFilter('TODOS')">TODOS</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'TRANSCOOP'"
+        [style.background]="filterCoop === 'TRANSCOOP' ? '#0d3b3e' : ''"
+        [style.color]="filterCoop === 'TRANSCOOP' ? '#fff' : ''"
+        [style.border-color]="filterCoop === 'TRANSCOOP' ? '#0d3b3e' : ''"
+        (click)="setFilter('TRANSCOOP')">TRANSCOOP</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'ECOTRANSPORTE'"
+        [style.background]="filterCoop === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+        [style.color]="filterCoop === 'ECOTRANSPORTE' ? '#fff' : ''"
+        [style.border-color]="filterCoop === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+        (click)="setFilter('ECOTRANSPORTE')">ECOTRANSPORTE</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'CENTRALCOOP'"
+        [style.background]="filterCoop === 'CENTRALCOOP' ? '#d4580a' : ''"
+        [style.color]="filterCoop === 'CENTRALCOOP' ? '#fff' : ''"
+        [style.border-color]="filterCoop === 'CENTRALCOOP' ? '#d4580a' : ''"
+        (click)="setFilter('CENTRALCOOP')">CENTRALCOOP</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'ALQUITRUCK'"
+        [style.background]="filterCoop === 'ALQUITRUCK' ? '#0ea5e9' : ''"
+        [style.color]="filterCoop === 'ALQUITRUCK' ? '#fff' : ''"
+        [style.border-color]="filterCoop === 'ALQUITRUCK' ? '#0ea5e9' : ''"
+        (click)="setFilter('ALQUITRUCK')">ALQUITRUCK</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'SITTRANS'"
+        [style.background]="filterCoop === 'SITTRANS' ? '#dc2626' : ''"
+        [style.color]="filterCoop === 'SITTRANS' ? '#fff' : ''"
+        [style.border-color]="filterCoop === 'SITTRANS' ? '#dc2626' : ''"
+        (click)="setFilter('SITTRANS')">SITTRANS</button>
+</div>
+
+<!-- Sección: Próximas a caducar (≤30 días) -->
+<div style="margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+    <span style="font-size:13px; font-weight:700; color:#d97706;">Próximas a caducar</span>
+    <span style="background:#fef3c7; color:#d97706; font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600;">
+        ≤ 30 días · {{ filteredProximas.length }} vehículos
+    </span>
+</div>
+
+<div class="dc-table-wrapper" style="margin-bottom:32px;">
+    <table class="dc-table">
+        <thead>
+            <tr>
+                <th>Matrícula</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Destinado a</th>
+                <th>Conductor</th>
+                <th style="cursor:pointer; white-space:nowrap; user-select:none;" (click)="toggleSortProximas()">Fecha Tacógrafo
+                    <span style="font-size:10px;">{{ sortDirProximas === 'asc' ? '↑' : sortDirProximas === 'desc' ? '↓' : '↕' }}</span>
+                </th>
+                <th>Días restantes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let v of filteredProximas" class="clickable-row" (click)="irAVehiculo(v.matricula)">
+                <td>
+                    <span class="matricula" style="border-color:#d97706; color:#d97706;">{{ v.matricula }}</span>
+                </td>
+                <td style="font-weight:600; color:#0a0f2c;">{{ v.marca || '—' }}</td>
+                <td style="font-size:12px; color:#374151;">{{ v.modelo || '—' }}</td>
+                <td><span class="coop-label" [ngClass]="coopClass(v.destinado_a)">{{ v.destinado_a }}</span></td>
+                <td (click)="$event.stopPropagation()">
+                    <a *ngIf="v.conductor_actual_id" [routerLink]="['/conductores', v.conductor_actual_id]"
+                        class="link-conductor">
+                        {{ v.conductor_actual }}
+                    </a>
+                    <span *ngIf="!v.conductor_actual_id" style="color:#8a96c4;">—</span>
+                </td>
+                <td class="mono" style="font-size:12px; font-weight:600; color:#d97706;">
+                    {{ v.tacografo || 'Sin fecha' }}
+                </td>
+                <td>
+                    <span *ngIf="v.dias_restantes !== null && v.dias_restantes !== undefined"
+                        [style.background]="v.dias_restantes <= 7 ? '#fee2e2' : '#fef3c7'"
+                        [style.color]="v.dias_restantes <= 7 ? '#dc2626' : '#d97706'"
+                        style="font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600;">
+                        {{ v.dias_restantes }} días
+                    </span>
+                    <span *ngIf="v.dias_restantes === null || v.dias_restantes === undefined"
+                        style="font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600; background:#f3f4f6; color:#6b7280;">
+                        Sin fecha
+                    </span>
+                </td>
+            </tr>
+            <tr *ngIf="filteredProximas.length === 0 && !loading">
+                <td colspan="7" style="text-align:center; color:#16a34a; padding:24px; font-weight:600;">
+                    ✓ Ningún tacógrafo vence en los próximos 30 días
+                </td>
+            </tr>
+            <tr *ngIf="loading">
+                <td colspan="7" style="text-align:center; color:#6b7280; padding:24px;">Cargando...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Sección: Caducadas -->
+<div style="margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+    <span style="font-size:13px; font-weight:700; color:#dc2626;">Inspecciones Caducadas</span>
+    <span style="background:#fee2e2; color:#dc2626; font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600;">
+        {{ filteredCaducadas.length }} vehículos
+    </span>
+</div>
+
+<div class="dc-table-wrapper">
+    <table class="dc-table">
+        <thead>
+            <tr>
+                <th>Matrícula</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Destinado a</th>
+                <th>Conductor</th>
+                <th style="cursor:pointer; white-space:nowrap; user-select:none;" (click)="toggleSortCaducadas()">Fecha Tacógrafo
+                    <span style="font-size:10px;">{{ sortDirCaducadas === 'asc' ? '↑' : sortDirCaducadas === 'desc' ? '↓' : '↕' }}</span>
+                </th>
+                <th>Días caducada</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let v of filteredCaducadas" class="clickable-row" (click)="irAVehiculo(v.matricula)">
+                <td>
+                    <span class="matricula" style="border-color:#dc2626; color:#dc2626;">{{ v.matricula }}</span>
+                </td>
+                <td style="font-weight:600; color:#0a0f2c;">{{ v.marca || '—' }}</td>
+                <td style="font-size:12px; color:#374151;">{{ v.modelo || '—' }}</td>
+                <td><span class="coop-label" [ngClass]="coopClass(v.destinado_a)">{{ v.destinado_a }}</span></td>
+                <td (click)="$event.stopPropagation()">
+                    <a *ngIf="v.conductor_actual_id" [routerLink]="['/conductores', v.conductor_actual_id]"
+                        class="link-conductor">
+                        {{ v.conductor_actual }}
+                    </a>
+                    <span *ngIf="!v.conductor_actual_id" style="color:#8a96c4;">—</span>
+                </td>
+                <td class="mono" style="font-size:12px; font-weight:600;" [style.color]="v.tacografo ? '#dc2626' : '#9ca3af'">
+                    {{ v.tacografo || 'Sin fecha' }}
+                </td>
+                <td>
+                    <span *ngIf="v.dias_caducada !== null && v.dias_caducada !== undefined"
+                        [style.background]="v.dias_caducada > 365 ? '#fee2e2' : '#fef3c7'"
+                        [style.color]="v.dias_caducada > 365 ? '#dc2626' : '#d97706'"
+                        style="font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600;">
+                        {{ v.dias_caducada }} días
+                    </span>
+                    <span *ngIf="v.dias_caducada === null || v.dias_caducada === undefined"
+                        style="font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600; background:#f3f4f6; color:#6b7280;">
+                        Sin fecha
+                    </span>
+                </td>
+            </tr>
+            <tr *ngIf="filteredCaducadas.length === 0 && !loading">
+                <td colspan="7" style="text-align:center; color:#16a34a; padding:32px; font-weight:600;">
+                    ✓ Sin inspecciones de tacógrafo caducadas
+                </td>
+            </tr>
+            <tr *ngIf="loading">
+                <td colspan="7" style="text-align:center; color:#6b7280; padding:32px;">Cargando...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

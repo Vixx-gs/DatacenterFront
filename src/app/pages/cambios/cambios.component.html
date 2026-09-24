@@ -1,0 +1,39 @@
+<div class="page-header" style="display:flex; align-items:center; justify-content:space-between;">
+  <div>
+    <div class="page-title">Cambios de Vehículo</div>
+    <div class="page-subtitle">Movimientos del mes actual</div>
+  </div>
+  <button class="btn btn-ghost btn-sm" (click)="exportarCSV()" title="Exportar CSV">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    CSV
+  </button>
+</div>
+
+<div class="dc-table-wrapper">
+  <table class="dc-table">
+    <thead>
+      <tr>
+        <th colspan="3" style="background:#dcfce7; color:#166534; border-right: 2px solid #bbf7d0;">↑ COGE VEHÍCULO</th>
+        <th colspan="3" style="background:#fee2e2; color:#991b1b;">↓ DEJA VEHÍCULO</th>
+      </tr>
+      <tr>
+        <th>Fecha Inicio</th>
+        <th>Matrícula</th>
+        <th style="border-right: 2px solid #d0d7f0;">Conductor</th>
+        <th>Fecha Fin</th>
+        <th>Matrícula</th>
+        <th>Conductor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of cambios">
+        <td class="mono" style="font-size:12px; color:#374151;">{{ c.fechaInicio }}</td>
+        <td><span class="matricula">{{ c.matriculaEntra }}</span></td>
+        <td style="color:#111827; font-size:12px; border-right: 2px solid #eef1fb;">{{ c.conductorEntra }}</td>
+        <td class="mono" style="font-size:12px; color:#374151;">{{ c.fechaFin }}</td>
+        <td><span class="matricula">{{ c.matriculaSale }}</span></td>
+        <td style="color:#111827; font-size:12px;">{{ c.conductorSale }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

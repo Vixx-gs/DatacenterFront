@@ -1,0 +1,122 @@
+<div class="page-header" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+    <div>
+        <div class="page-title">GPS</div>
+        <div class="page-subtitle">Dispositivos GPS asignados a la flota</div>
+    </div>
+    <button class="btn btn-ghost btn-sm" (click)="exportarCSV()" title="Exportar CSV">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        CSV
+    </button>
+</div>
+
+<div class="toolbar" style="margin-bottom:16px;">
+    <div class="search-wrapper">
+        <span class="search-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+        </span>
+        <input class="dc-input dc-input-search" placeholder="Buscar matrícula, marca, conductor, GPS..."
+            (input)="onSearch($any($event.target).value)" />
+    </div>
+    <div class="v-divider"></div>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'TODOS'"
+        [style.background]="filterCoop === 'TODOS' ? '#6b7280' : ''"
+        [style.color]="filterCoop === 'TODOS' ? '#fff' : ''"
+        [style.border-color]="filterCoop === 'TODOS' ? '#6b7280' : ''" (click)="setFilter('TODOS')">TODOS</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'TRANSCOOP'"
+        [style.background]="filterCoop === 'TRANSCOOP' ? '#0d3b3e' : ''"
+        [style.color]="filterCoop === 'TRANSCOOP' ? '#fff' : ''"
+        [style.border-color]="filterCoop === 'TRANSCOOP' ? '#0d3b3e' : ''"
+        (click)="setFilter('TRANSCOOP')">TRANSCOOP</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'ECOTRANSPORTE'"
+        [style.background]="filterCoop === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+        [style.color]="filterCoop === 'ECOTRANSPORTE' ? '#fff' : ''"
+        [style.border-color]="filterCoop === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+        (click)="setFilter('ECOTRANSPORTE')">ECOTRANSPORTE</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'CENTRALCOOP'"
+        [style.background]="filterCoop === 'CENTRALCOOP' ? '#d4580a' : ''"
+        [style.color]="filterCoop === 'CENTRALCOOP' ? '#fff' : ''"
+        [style.border-color]="filterCoop === 'CENTRALCOOP' ? '#d4580a' : ''"
+        (click)="setFilter('CENTRALCOOP')">CENTRALCOOP</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'ALQUITRUCK'"
+        [style.background]="filterCoop === 'ALQUITRUCK' ? '#0ea5e9' : ''"
+        [style.color]="filterCoop === 'ALQUITRUCK' ? '#fff' : ''"
+        [style.border-color]="filterCoop === 'ALQUITRUCK' ? '#0ea5e9' : ''"
+        (click)="setFilter('ALQUITRUCK')">ALQUITRUCK</button>
+    <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'SITTRANS'"
+        [style.background]="filterCoop === 'SITTRANS' ? '#dc2626' : ''"
+        [style.color]="filterCoop === 'SITTRANS' ? '#fff' : ''"
+        [style.border-color]="filterCoop === 'SITTRANS' ? '#dc2626' : ''"
+        (click)="setFilter('SITTRANS')">SITTRANS</button>
+    <div class="v-divider"></div>
+    <button class="btn btn-ghost btn-sm"
+        [style.background]="filterGps === 'TODOS' ? '#6b7280' : ''"
+        [style.color]="filterGps === 'TODOS' ? '#fff' : ''"
+        [style.border-color]="filterGps === 'TODOS' ? '#6b7280' : ''"
+        (click)="setFilterGps('TODOS')">TODOS GPS</button>
+    <button class="btn btn-ghost btn-sm"
+        [style.background]="filterGps === 'SIN_GPS' ? '#dc2626' : ''"
+        [style.color]="filterGps === 'SIN_GPS' ? '#fff' : ''"
+        [style.border-color]="filterGps === 'SIN_GPS' ? '#dc2626' : ''"
+        (click)="setFilterGps('SIN_GPS')">SIN GPS</button>
+    <button *ngFor="let g of gpsOpciones" class="btn btn-ghost btn-sm"
+        [style.background]="filterGps === g ? '#0369a1' : ''"
+        [style.color]="filterGps === g ? '#fff' : ''"
+        [style.border-color]="filterGps === g ? '#0369a1' : ''"
+        (click)="setFilterGps(g)">{{ g }}</button>
+</div>
+
+<div style="margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+    <span style="font-size:13px; font-weight:700; color:#0a0f2c;">Vehículos</span>
+    <span style="background:#e0f2fe; color:#0369a1; font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600;">
+        {{ filtered.length }} vehículos
+    </span>
+</div>
+
+<div class="dc-table-wrapper">
+    <table class="dc-table">
+        <thead>
+            <tr>
+                <th>Matrícula</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Destinado a</th>
+                <th>Conductor</th>
+                <th>GPS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let v of filtered" class="clickable-row" (click)="irAVehiculo(v.matricula)">
+                <td>
+                    <span class="matricula">{{ v.matricula }}</span>
+                </td>
+                <td style="font-weight:600; color:#0a0f2c;">{{ v.marca || '—' }}</td>
+                <td style="font-size:12px; color:#374151;">{{ v.modelo || '—' }}</td>
+                <td><span class="coop-label" [ngClass]="coopClass(v.destinado_a)">{{ v.destinado_a }}</span></td>
+                <td (click)="$event.stopPropagation()">
+                    <a *ngIf="v.conductor_actual_id" [routerLink]="['/conductores', v.conductor_actual_id]"
+                        class="link-conductor">
+                        {{ v.conductor_actual }}
+                    </a>
+                    <span *ngIf="!v.conductor_actual_id && v.conductor_actual">{{ v.conductor_actual }}</span>
+                    <span *ngIf="!v.conductor_actual_id && !v.conductor_actual" style="color:#8a96c4;">—</span>
+                </td>
+                <td>
+                    <span *ngIf="v.gps"
+                        style="background:#e0f2fe; color:#0369a1; font-size:11px; padding:2px 10px; border-radius:10px; font-weight:600;">
+                        {{ v.gps }}
+                    </span>
+                    <span *ngIf="!v.gps" style="color:#9ca3af;">—</span>
+                </td>
+            </tr>
+            <tr *ngIf="filtered.length === 0 && !loading">
+                <td colspan="6" style="text-align:center; color:#6b7280; padding:32px;">Sin resultados</td>
+            </tr>
+            <tr *ngIf="loading">
+                <td colspan="6" style="text-align:center; color:#6b7280; padding:32px;">Cargando...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

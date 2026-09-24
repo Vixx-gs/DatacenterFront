@@ -1,0 +1,129 @@
+.ficha-header {
+  display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px;
+}
+
+.ficha-header-titles { flex: 1; }
+
+.ficha-header-top {
+  display: flex; gap: 20px; align-items: flex-start;
+}
+
+.ficha-matricula-box, .ficha-estado-box {
+  display: flex; flex-direction: column; gap: 4px;
+}
+
+.ficha-matricula-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #8a96c4;
+}
+
+.ficha-matricula-val {
+  font-family: var(--font-mono); font-size: 18px; font-weight: 800;
+  color: #0a0f2c; background: #eef1fb; padding: 4px 14px;
+  border-radius: 6px; border: 1px solid #d0d7f0; letter-spacing: 0.06em;
+}
+
+.ficha-grid-main {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;
+}
+
+.ficha-col { display: flex; flex-direction: column; }
+
+.ficha-card {
+  background: #ffffff; border: 1px solid #d0d7f0;
+  border-radius: 10px; padding: 16px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.ficha-card-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #0a0f2c;
+  background: #eef1fb; margin: -16px -20px 14px;
+  padding: 8px 20px; border-radius: 10px 10px 0 0;
+  border-bottom: 1px solid #d0d7f0;
+}
+
+.ficha-card-title-tabs {
+  display: flex; align-items: center; justify-content: space-between;
+  background: #eef1fb; margin: -16px -20px 0;
+  padding: 8px 20px; border-radius: 10px 10px 0 0;
+  border-bottom: 1px solid #d0d7f0;
+}
+
+.seguro-tabs { display: flex; gap: 4px; }
+.seguro-tab {
+  padding: 3px 10px; border-radius: 4px; cursor: pointer;
+  font-size: 11px; font-weight: 600; border: 1px solid #d0d7f0;
+  background: transparent; color: #6b7280; font-family: var(--font-sans);
+  transition: all 0.15s;
+  &:hover { background: #ffffff; }
+  &.active { background: #ffffff; color: #0a0f2c; border-color: #b0bcde; }
+}
+
+.ficha-fields-2col {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+
+.ficha-fields-4col {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; align-items: center;
+}
+
+.ficha-field { display: flex; flex-direction: column; gap: 2px; }
+
+.ficha-field-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #8a96c4;
+}
+
+.ficha-field-value { font-size: 13px; color: #0a0f2c; font-weight: 500; }
+.ficha-empty { color: #8a96c4; font-size: 13px; font-style: italic; padding: 8px 0; }
+
+.ficha-fields-3col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.ficha-group-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8a96c4;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #eef1fb;
+}
+
+.ficha-card-wide {
+  grid-column: 1 / -1;
+}
+
+.link-conductor {
+  font-weight: 700; color: #2563eb; text-decoration: none;
+  &:hover { text-decoration: underline; }
+}
+
+@media (max-width: 768px) {
+  .ficha-grid-main {
+    grid-template-columns: 1fr;
+  }
+
+  .ficha-fields-4col {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ficha-card {
+    padding: 14px 16px;
+  }
+
+  .ficha-card-title {
+    margin: -14px -16px 12px;
+    padding: 8px 16px;
+  }
+
+  .ficha-card-title-tabs {
+    margin: -14px -16px 0;
+    padding: 8px 16px;
+  }
+}

@@ -1,0 +1,45 @@
+<div class="page-header" style="display:flex; align-items:center; justify-content:space-between;">
+  <div>
+    <div class="page-title">Ingresos</div>
+    <div class="page-subtitle">Facturas de ventas y liquidaciones</div>
+  </div>
+  <button class="btn btn-ghost btn-sm" (click)="exportarCSV()" title="Exportar CSV">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    CSV
+  </button>
+</div>
+
+<div class="toolbar">
+  <button class="btn btn-ghost btn-sm" *ngFor="let c of coops" [class.active]="filtroCoop === c" (click)="setFiltro(c)">{{ c }}</button>
+</div>
+
+<div class="dc-table-wrapper">
+  <table class="dc-table">
+    <thead>
+      <tr>
+        <th>Mes</th>
+        <th>Proveedor</th>
+        <th>NIF</th>
+        <th>Código</th>
+        <th>Nº Factura</th>
+        <th>Ref. Factura</th>
+        <th>Fecha</th>
+        <th>Cooperativa</th>
+        <th>Familia</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let i of filtered">
+        <td style="color:#374151; font-size:12px;">{{ i.mes || i.nombre_mes }}</td>
+        <td style="font-weight:600; color:#0a0f2c;">{{ i.proveedor }}</td>
+        <td class="mono" style="font-size:11.5px; color:#374151;">{{ i.nif }}</td>
+        <td class="mono" style="font-size:11.5px; color:#374151;">{{ i.codigo }}</td>
+        <td class="mono" style="font-weight:700; color:#0a0f2c;">{{ i.numFactura || i.num_factura }}</td>
+        <td style="color:#111827; font-size:12px;">{{ i.refFactura || i.ref_factura }}</td>
+        <td class="mono" style="font-size:12px; color:#374151;">{{ i.fecha }}</td>
+        <td><span class="coop-label" [ngClass]="coopClass(i.cooperativa)">{{ i.cooperativa }}</span></td>
+        <td style="color:#374151; font-size:11.5px;">{{ i.familia }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,152 @@
+<div class="page-header">
+  <div>
+    <div class="page-title">Contratos {{ filtroTipo !== 'TODOS' ? filtroTipo : '' }}</div>
+    <div class="page-subtitle">{{ filtered.length }} contratos</div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="search-wrapper">
+    <span class="search-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+    </span>
+    <input class="dc-input dc-input-search" placeholder="Buscar contrato, matrícula, conductor..."
+      (input)="onSearch($any($event.target).value)" />
+  </div>
+  <div class="v-divider"></div>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroTipo === 'TODOS'"
+    [style.background]="filtroTipo === 'TODOS' ? '#6b7280' : ''" [style.color]="filtroTipo === 'TODOS' ? '#fff' : ''"
+    [style.border-color]="filtroTipo === 'TODOS' ? '#6b7280' : ''" (click)="setFiltroTipo('TODOS')">TODOS</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroTipo === 'AOC'"
+    [style.background]="filtroTipo === 'AOC' ? '#2563eb' : ''" [style.color]="filtroTipo === 'AOC' ? '#fff' : ''"
+    [style.border-color]="filtroTipo === 'AOC' ? '#2563eb' : ''" (click)="setFiltroTipo('AOC')">AOC</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroTipo === 'Alquiler'"
+    [style.background]="filtroTipo === 'Alquiler' ? '#7c3aed' : ''"
+    [style.color]="filtroTipo === 'Alquiler' ? '#fff' : ''"
+    [style.border-color]="filtroTipo === 'Alquiler' ? '#7c3aed' : ''"
+    (click)="setFiltroTipo('Alquiler')">Alquiler</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroTipo === 'Botiquín'"
+    [style.background]="filtroTipo === 'Botiquín' ? '#d97706' : ''"
+    [style.color]="filtroTipo === 'Botiquín' ? '#fff' : ''"
+    [style.border-color]="filtroTipo === 'Botiquín' ? '#d97706' : ''"
+    (click)="setFiltroTipo('Botiquín')">Botiquín</button>
+  <div class="v-divider"></div>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroEstado === 'TODOS'"
+    [style.background]="filtroEstado === 'TODOS' ? '#6b7280' : ''"
+    [style.color]="filtroEstado === 'TODOS' ? '#fff' : ''"
+    [style.border-color]="filtroEstado === 'TODOS' ? '#6b7280' : ''" (click)="setFiltroEstado('TODOS')">TODOS</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroEstado === 'ACTIVO'"
+    [style.background]="filtroEstado === 'ACTIVO' ? '#16a34a' : ''"
+    [style.color]="filtroEstado === 'ACTIVO' ? '#fff' : ''"
+    [style.border-color]="filtroEstado === 'ACTIVO' ? '#16a34a' : ''"
+    (click)="setFiltroEstado('ACTIVO')">ACTIVO</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroEstado === 'INACTIVO'"
+    [style.background]="filtroEstado === 'INACTIVO' ? '#dc2626' : ''"
+    [style.color]="filtroEstado === 'INACTIVO' ? '#fff' : ''"
+    [style.border-color]="filtroEstado === 'INACTIVO' ? '#dc2626' : ''"
+    (click)="setFiltroEstado('INACTIVO')">INACTIVO</button>
+  <div class="v-divider"></div>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroCoop === 'TODOS'"
+    (click)="setFiltroCoop('TODOS')">TODOS</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroCoop === 'TRANSCOOP'"
+    [style.background]="filtroCoop === 'TRANSCOOP' ? '#0d3b3e' : ''"
+    [style.color]="filtroCoop === 'TRANSCOOP' ? '#fff' : ''"
+    [style.border-color]="filtroCoop === 'TRANSCOOP' ? '#0d3b3e' : ''"
+    (click)="setFiltroCoop('TRANSCOOP')">TRANSCOOP</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroCoop === 'ECOTRANSPORTE'"
+    [style.background]="filtroCoop === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+    [style.color]="filtroCoop === 'ECOTRANSPORTE' ? '#fff' : ''"
+    [style.border-color]="filtroCoop === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+    (click)="setFiltroCoop('ECOTRANSPORTE')">ECOTRANSPORTE</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroCoop === 'CENTRALCOOP'"
+    [style.background]="filtroCoop === 'CENTRALCOOP' ? '#d4580a' : ''"
+    [style.color]="filtroCoop === 'CENTRALCOOP' ? '#fff' : ''"
+    [style.border-color]="filtroCoop === 'CENTRALCOOP' ? '#d4580a' : ''"
+    (click)="setFiltroCoop('CENTRALCOOP')">CENTRALCOOP</button>
+  <div class="v-divider"></div>
+  <button class="btn btn-ghost btn-sm"
+    [style.background]="filtroGarantia === 'TODOS' ? '#6b7280' : ''"
+    [style.color]="filtroGarantia === 'TODOS' ? '#fff' : ''"
+    [style.border-color]="filtroGarantia === 'TODOS' ? '#6b7280' : ''"
+    (click)="setFiltroGarantia('TODOS')">Todos</button>
+  <button class="btn btn-ghost btn-sm"
+    [style.background]="filtroGarantia === 'CON' ? '#2563eb' : ''"
+    [style.color]="filtroGarantia === 'CON' ? '#fff' : ''"
+    [style.border-color]="filtroGarantia === 'CON' ? '#2563eb' : ''"
+    (click)="setFiltroGarantia('CON')">Con garantía</button>
+  <button class="btn btn-ghost btn-sm"
+    [style.background]="filtroGarantia === 'SIN' ? '#dc2626' : ''"
+    [style.color]="filtroGarantia === 'SIN' ? '#fff' : ''"
+    [style.border-color]="filtroGarantia === 'SIN' ? '#dc2626' : ''"
+    (click)="setFiltroGarantia('SIN')">Sin garantía</button>
+  <div class="v-divider"></div>
+  <button class="btn btn-ghost btn-sm" (click)="exportarCSV()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+    Exportar CSV
+  </button>
+</div>
+
+<div class="dc-table-wrapper">
+  <table class="dc-table">
+    <thead>
+      <tr>
+        <th>Nº Contrato</th>
+        <th>Tipo</th>
+        <th>Vehículo</th>
+        <th>Empresa</th>
+        <th>Conductor</th>
+        <th>F. Inicio</th>
+        <th>F. Fin</th>
+        <th>Nº Cuotas</th>
+        <th>Cuota Base</th>
+        <th>Condiciones</th>
+        <th>Fianza</th>
+        <th>Entrada</th>
+        <th>Valor Residual</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of filtered">
+        <td class="mono" style="font-weight:700; color:#0a0f2c;">{{ c.num_contrato }}</td>
+        <td><span class="badge" [ngClass]="badgeClass(c.tipo_contrato || c.tipo)">{{ c.tipo_contrato || c.tipo }}</span>
+        </td>
+        <td>
+          <a *ngIf="c.vehiculo_id" [routerLink]="['/vehiculos', c.vehiculo_id]" style="text-decoration:none;">
+            <span class="matricula" style="cursor:pointer; border-color:#2563eb; color:#2563eb;">{{ c.vehiculo_id
+              }}</span>
+          </a>
+        </td>
+        <td><span class="coop-label" [ngClass]="coopClass(c.empresa_id)">{{ c.empresa_id }}</span></td>
+        <td>
+          <a *ngIf="c.cliente_id" [routerLink]="['/conductores', c.cliente_id]"
+            style="font-weight:600; color:#2563eb; text-decoration:none; font-size:12.5px;">
+            {{ c.nombre_conductor || c.cliente_id }}
+          </a>
+          <span *ngIf="!c.cliente_id" style="color:#8a96c4;">—</span>
+        </td>
+        <td class="mono" style="font-size:12px; color:#374151; white-space:nowrap;">{{ c.fecha_inicio }}</td>
+        <td class="mono" style="font-size:12px; color:#374151; white-space:nowrap;">{{ c.fecha_fin || '—' }}</td>
+        <td style="color:#111827; text-align:center;">{{ c.num_cuotas || '—' }}</td>
+        <td style="font-weight:700; color:#0a0f2c; white-space:nowrap;">{{ c.cuota_base ? (c.cuota_base |
+          number:'1.2-2') + ' €' : '—' }}</td>
+        <td
+          style="color:#374151; font-size:11.5px; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+          {{ c.condiciones || '—' }}</td>
+        <td style="color:#374151; white-space:nowrap;">{{ c.fianza ? (c.fianza | number:'1.0-0') + ' €' : '—' }}</td>
+        <td style="color:#374151; white-space:nowrap;">{{ c.entrada ? (c.entrada | number:'1.0-0') + ' €' : '—' }}</td>
+        <td style="color:#374151; white-space:nowrap;">{{ c.valor_residual ? (c.valor_residual | number:'1.0-0') + ' €'
+          : '—' }}</td>
+      </tr>
+      <tr *ngIf="filtered.length === 0">
+        <td colspan="13" style="text-align:center; color:#6b7280; padding:32px;">Sin resultados</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,199 @@
+<div class="page-header">
+  <div>
+    <div class="page-title">Teléfonos</div>
+    <div class="page-subtitle">Directorio de contactos</div>
+  </div>
+  <div style="display:flex; gap:8px; align-items:center;">
+  <button class="btn btn-ghost btn-sm" (click)="exportarCSV()" title="Exportar CSV">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    CSV
+  </button>
+  <button *ngIf="isAdmin" class="btn btn-primary" (click)="openAdd()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+    Añadir teléfono
+  </button>
+  </div>
+</div>
+
+<div style="display:flex; gap:24px; margin-bottom:28px;">
+  <div style="flex:1;">
+    <div class="tel-search-label"
+      style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">
+      Buscar por persona o empresa</div>
+    <input class="dc-input" style="width:100%;" placeholder="Nombre o empresa..." [(ngModel)]="searchPersona" />
+  </div>
+  <div style="flex:1;">
+    <div class="tel-search-label"
+      style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">
+      Buscar por extensión</div>
+    <input class="dc-input" style="width:100%;" placeholder="Número de extensión..." [(ngModel)]="searchExtension" />
+  </div>
+</div>
+
+<!-- Resultados búsqueda por persona -->
+<div *ngIf="searchPersona" class="dc-table-wrapper" style="margin-bottom:24px;">
+  <table class="dc-table">
+    <thead>
+      <tr>
+        <th>Nº de teléfono</th>
+        <th>Extensión</th>
+        <th>Persona</th>
+        <th>Empresa / Línea</th>
+        <th>Email</th>
+        <th>Pertenece a</th>
+        <th>Área</th>
+        <th *ngIf="isAdmin" class="tel-actions-th"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of filteredTelefonos">
+        <td class="mono" style="font-weight:700; color:#0a0f2c; white-space:nowrap;">{{ t.telefono || '—' }}</td>
+        <td class="mono" style="color:#374151;">{{ t.extension || '—' }}</td>
+        <td style="font-weight:600; color:#0a0f2c; white-space:nowrap;">{{ t.persona || '—' }}</td>
+        <td style="color:#111827; font-size:12px; white-space:nowrap;">{{ t.empresa }}</td>
+        <td style="color:#374151; font-size:12px;">{{ t.email || '—' }}</td>
+        <td style="color:#374151; font-size:12px; white-space:nowrap;">{{ t.pertenece || '—' }}</td>
+        <td style="color:#374151; font-size:12px; white-space:nowrap;">{{ t.area || '—' }}</td>
+        <td *ngIf="isAdmin" class="tel-actions-td">
+          <button class="tel-icon-btn tel-edit-btn" title="Editar" (click)="openEdit(t); $event.stopPropagation()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+          <button class="tel-icon-btn tel-delete-btn" title="Eliminar" (click)="askDelete(t); $event.stopPropagation()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              <path d="M10 11v6M14 11v6"/>
+              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+            </svg>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="filteredTelefonos.length === 0">
+        <td [attr.colspan]="isAdmin ? 8 : 7" style="text-align:center; color:#6b7280; padding:16px;">Sin resultados</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Resultados búsqueda por extensión -->
+<div *ngIf="searchExtension" class="dc-table-wrapper">
+  <table class="dc-table">
+    <thead>
+      <tr>
+        <th>Persona</th>
+        <th>Nº de teléfono</th>
+        <th>Empresa</th>
+        <th>Área</th>
+        <th *ngIf="isAdmin" class="tel-actions-th"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of filteredPorExtension">
+        <td style="font-weight:600; color:#0a0f2c;">{{ t.persona || '—' }}</td>
+        <td class="mono" style="color:#374151;">{{ t.telefono || '—' }}</td>
+        <td style="color:#111827; font-size:12px;">{{ t.empresa || '—' }}</td>
+        <td style="color:#374151; font-size:12px;">{{ t.area || '—' }}</td>
+        <td *ngIf="isAdmin" class="tel-actions-td">
+          <button class="tel-icon-btn tel-edit-btn" title="Editar" (click)="openEdit(t); $event.stopPropagation()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+          <button class="tel-icon-btn tel-delete-btn" title="Eliminar" (click)="askDelete(t); $event.stopPropagation()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              <path d="M10 11v6M14 11v6"/>
+              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+            </svg>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="filteredPorExtension.length === 0">
+        <td [attr.colspan]="isAdmin ? 5 : 4" style="text-align:center; color:#6b7280; padding:16px;">Sin resultados</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal añadir / editar -->
+<div *ngIf="showModal" class="tel-overlay" (click)="cancelModal()">
+  <div class="tel-modal" (click)="$event.stopPropagation()">
+    <div class="tel-modal-header">
+      <span class="tel-modal-title">{{ editingIndex !== null ? 'Editar teléfono' : 'Añadir teléfono' }}</span>
+      <button class="tel-modal-close" (click)="cancelModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="tel-modal-body">
+      <div class="tel-form-row">
+        <div class="tel-form-group">
+          <label class="tel-form-label">Nº de teléfono</label>
+          <input class="dc-input" style="width:100%;" [(ngModel)]="formData.telefono" placeholder="600000000" />
+        </div>
+        <div class="tel-form-group">
+          <label class="tel-form-label">Extensión</label>
+          <input class="dc-input" style="width:100%;" [(ngModel)]="formData.extension" placeholder="2001" />
+        </div>
+      </div>
+      <div class="tel-form-row">
+        <div class="tel-form-group">
+          <label class="tel-form-label">Persona</label>
+          <input class="dc-input" style="width:100%;" [(ngModel)]="formData.persona" placeholder="Nombre completo" />
+        </div>
+        <div class="tel-form-group">
+          <label class="tel-form-label">Empresa / Línea</label>
+          <input class="dc-input" style="width:100%;" [(ngModel)]="formData.empresa" placeholder="TRANSCOOP" />
+        </div>
+      </div>
+      <div class="tel-form-row">
+        <div class="tel-form-group">
+          <label class="tel-form-label">Email</label>
+          <input class="dc-input" style="width:100%;" [(ngModel)]="formData.email" placeholder="correo@empresa.es" />
+        </div>
+        <div class="tel-form-group">
+          <label class="tel-form-label">Pertenece a</label>
+          <input class="dc-input" style="width:100%;" [(ngModel)]="formData.pertenece" placeholder="Sittrans" />
+        </div>
+      </div>
+      <div class="tel-form-group">
+        <label class="tel-form-label">Área</label>
+        <input class="dc-input" style="width:100%;" [(ngModel)]="formData.area" placeholder="Gestores" />
+      </div>
+    </div>
+    <div class="tel-modal-footer">
+      <button class="btn btn-ghost" (click)="cancelModal()">Cancelar</button>
+      <button class="btn btn-primary" (click)="saveForm()">
+        {{ editingIndex !== null ? 'Guardar cambios' : 'Añadir' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmación borrado -->
+<div *ngIf="showConfirm" class="tel-overlay" (click)="cancelConfirm()">
+  <div class="tel-confirm" (click)="$event.stopPropagation()">
+    <div class="tel-confirm-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+        <path d="M10 11v6M14 11v6"/>
+        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+      </svg>
+    </div>
+    <div class="tel-confirm-title">Eliminar teléfono</div>
+    <div class="tel-confirm-msg">¿Estás seguro de que quieres eliminar este contacto? Esta acción no se puede deshacer.</div>
+    <div class="tel-confirm-actions">
+      <button class="btn btn-ghost" (click)="cancelConfirm()">Cancelar</button>
+      <button class="btn btn-danger" (click)="doDelete()">Eliminar</button>
+    </div>
+  </div>
+</div>

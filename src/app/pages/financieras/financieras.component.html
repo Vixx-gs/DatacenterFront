@@ -1,0 +1,112 @@
+<div class="page-header" style="display:flex; align-items:center; justify-content:space-between;">
+  <div>
+    <div class="page-title">Financieras</div>
+    <div class="page-subtitle">{{ filtered.length }} contratos de financiación</div>
+  </div>
+  <button class="btn btn-ghost btn-sm" (click)="exportarCSV()" title="Exportar CSV">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    CSV
+  </button>
+</div>
+
+<div class="toolbar">
+  <div class="search-wrapper">
+    <span class="search-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+    </span>
+    <input class="dc-input dc-input-search" placeholder="Buscar contrato, matrícula, financiera..."
+      (input)="onSearch($any($event.target).value)" />
+  </div>
+  <div class="v-divider"></div>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroTipo === 'TODOS'"
+    [style.background]="filtroTipo === 'TODOS' ? '#6b7280' : ''" [style.color]="filtroTipo === 'TODOS' ? '#fff' : ''"
+    [style.border-color]="filtroTipo === 'TODOS' ? '#6b7280' : ''" (click)="setFiltroTipo('TODOS')">TODOS</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroTipo === 'RENTING'"
+    [style.background]="filtroTipo === 'RENTING' ? '#4f46e5' : ''"
+    [style.color]="filtroTipo === 'RENTING' ? '#fff' : ''"
+    [style.border-color]="filtroTipo === 'RENTING' ? '#4f46e5' : ''" (click)="setFiltroTipo('RENTING')">RENTING</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroTipo === 'LEASING'"
+    [style.background]="filtroTipo === 'LEASING' ? '#0891b2' : ''"
+    [style.color]="filtroTipo === 'LEASING' ? '#fff' : ''"
+    [style.border-color]="filtroTipo === 'LEASING' ? '#0891b2' : ''" (click)="setFiltroTipo('LEASING')">LEASING</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroTipo === 'ALQUILER OC'"
+    [style.background]="filtroTipo === 'ALQUILER OC' ? '#7c3aed' : ''"
+    [style.color]="filtroTipo === 'ALQUILER OC' ? '#fff' : ''"
+    [style.border-color]="filtroTipo === 'ALQUILER OC' ? '#7c3aed' : ''" (click)="setFiltroTipo('ALQUILER OC')">ALQUILER
+    OC</button>
+  <div class="v-divider"></div>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroCoop === 'TODOS'"
+    [style.background]="filtroCoop === 'TODOS' ? '#6b7280' : ''" [style.color]="filtroCoop === 'TODOS' ? '#fff' : ''"
+    [style.border-color]="filtroCoop === 'TODOS' ? '#6b7280' : ''" (click)="setFiltroCoop('TODOS')">TODOS</button>
+  <button class="btn btn-ghost btn-sm" *ngFor="let c of coops.slice(1)" [class.active]="filtroCoop === c"
+    [style.background]="filtroCoop === c ? getCoopColor(c) : ''" [style.color]="filtroCoop === c ? '#fff' : ''"
+    [style.border-color]="filtroCoop === c ? getCoopColor(c) : ''" (click)="setFiltroCoop(c)">{{ c }}</button>
+  <div class="v-divider"></div>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroEstado === 'TODOS'"
+    [style.background]="filtroEstado === 'TODOS' ? '#6b7280' : ''" [style.color]="filtroEstado === 'TODOS' ? '#fff' : ''"
+    [style.border-color]="filtroEstado === 'TODOS' ? '#6b7280' : ''" (click)="setFiltroEstado('TODOS')">TODOS</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroEstado === 'ACTIVOS'"
+    [style.background]="filtroEstado === 'ACTIVOS' ? '#16a34a' : ''" [style.color]="filtroEstado === 'ACTIVOS' ? '#fff' : ''"
+    [style.border-color]="filtroEstado === 'ACTIVOS' ? '#16a34a' : ''" (click)="setFiltroEstado('ACTIVOS')">ACTIVOS</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroEstado === 'INACTIVOS'"
+    [style.background]="filtroEstado === 'INACTIVOS' ? '#dc2626' : ''" [style.color]="filtroEstado === 'INACTIVOS' ? '#fff' : ''"
+    [style.border-color]="filtroEstado === 'INACTIVOS' ? '#dc2626' : ''" (click)="setFiltroEstado('INACTIVOS')">INACTIVOS</button>
+</div>
+
+<div class="dc-table-wrapper">
+  <table class="dc-table">
+    <thead>
+      <tr>
+        <th>Nº Contrato</th>
+        <th>Vehículo</th>
+        <th>Empresa</th>
+        <th>Tipo</th>
+        <th>F. Inicio</th>
+        <th>F. Fin</th>
+        <th>Cuota Mensual</th>
+        <th>Nº Cuotas</th>
+        <th>Día Pago</th>
+        <th>Importe Fin.</th>
+        <th>Valor Residual</th>
+        <th>Financiera</th>
+        <th>Gastos Ini.</th>
+        <th>Fianzas</th>
+        <th>Entrada</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let f of filtered">
+        <td class="mono" style="font-size:11px; color:#0a0f2c; font-weight:600;">{{ f.num_contrato }}</td>
+        <td>
+          <a *ngIf="f.vehiculo_id" [routerLink]="['/vehiculos', f.vehiculo_id]" style="text-decoration:none;">
+            <span class="matricula" style="cursor:pointer; border-color:#2563eb; color:#2563eb;">{{ f.vehiculo_id
+              }}</span>
+          </a>
+        </td>
+        <td><span class="coop-label" [ngClass]="coopClass(f.empresa_id)">{{ f.empresa_id }}</span></td>
+        <td><span class="badge" [ngClass]="badgeClass(f.tipo)">{{ f.tipo }}</span></td>
+        <td class="mono" style="font-size:12px; color:#374151; white-space:nowrap;">{{ f.fecha_inicio }}</td>
+        <td class="mono" style="font-size:12px; color:#374151; white-space:nowrap;">{{ f.fecha_fin }}</td>
+        <td style="font-weight:700; color:#0a0f2c; white-space:nowrap;">{{ f.cuota_mensual ? (f.cuota_mensual |
+          number:'1.2-2') + ' €' : '—' }}</td>
+        <td style="color:#111827; text-align:center;">{{ f.num_cuotas || '—' }}</td>
+        <td style="color:#374151; text-align:center;">{{ f.dia_pago || '—' }}</td>
+        <td style="color:#374151; white-space:nowrap;">{{ f.importe_financiado ? (f.importe_financiado | number:'1.0-0')
+          + ' €' : '—' }}</td>
+        <td style="color:#374151; white-space:nowrap;">{{ f.valor_residual ? (f.valor_residual | number:'1.2-2') + ' €'
+          : '—' }}</td>
+        <td style="color:#111827; font-size:12px;">{{ f.financiera }}</td>
+        <td style="color:#374151; white-space:nowrap;">{{ f.gastos_iniciales ? (f.gastos_iniciales | number:'1.2-2') + '
+          €' : '—' }}</td>
+        <td style="color:#374151; white-space:nowrap;">{{ f.fianzas ? (f.fianzas | number:'1.2-2') + ' €' : '—' }}</td>
+        <td style="color:#374151; white-space:nowrap;">{{ f.entrada ? (f.entrada | number:'1.2-2') + ' €' : '—' }}</td>
+      </tr>
+      <tr *ngIf="filtered.length === 0">
+        <td colspan="15" style="text-align:center; color:#6b7280; padding:32px;">Sin resultados</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

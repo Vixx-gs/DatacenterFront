@@ -1,0 +1,42 @@
+<div class="page-header" style="display:flex; align-items:center; justify-content:space-between;">
+  <div>
+    <div class="page-title">Vehículos en Taller</div>
+    <div class="page-subtitle">{{ talleres.length }} vehículos actualmente en taller</div>
+  </div>
+  <button class="btn btn-ghost btn-sm" (click)="exportarCSV()" title="Exportar CSV">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    CSV
+  </button>
+</div>
+
+<div class="dc-table-wrapper">
+  <table class="dc-table">
+    <thead>
+      <tr>
+        <th>Matrícula</th>
+        <th>Taller</th>
+        <th>F. Entrada</th>
+        <th>F. Prevista Fin</th>
+        <th>Tipo Avería</th>
+        <th>Notas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of talleres">
+        <td>
+          <a [routerLink]="['/vehiculos', t.matricula]" style="text-decoration:none;">
+            <span class="matricula" style="cursor:pointer; border-color:#2563eb; color:#2563eb;">{{ t.matricula }}</span>
+          </a>
+        </td>
+        <td style="color:#0a0f2c; font-weight:500;">{{ t.taller || t.taller_nombre || '—' }}</td>
+        <td class="mono" style="font-size:12px; color:#374151;">{{ t.entrada || t.fecha_entrada }}</td>
+        <td class="mono" style="font-size:12px; color:#374151;">{{ t.prevista || t.fecha_prevista || '—' }}</td>
+        <td>
+          <span *ngIf="t.tipo || t.tipo_averia" class="badge" [ngClass]="badgeClass(t.tipo || t.tipo_averia)">{{ t.tipo || t.tipo_averia }}</span>
+          <span *ngIf="!t.tipo && !t.tipo_averia" style="color:#6b7280;">—</span>
+        </td>
+        <td style="color:#111827; font-size:11.5px;">{{ t.notas || '—' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

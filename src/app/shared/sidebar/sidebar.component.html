@@ -1,0 +1,48 @@
+<div class="sidebar-overlay" *ngIf="mobileOpen" (click)="closeMobile()"></div>
+
+<aside class="sidebar" [class.collapsed]="!open" [class.mobile-open]="mobileOpen">
+
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="6" fill="#0a1a30" />
+        <path d="M14 5L22 9.5V18.5L14 23L6 18.5V9.5L14 5Z" stroke="#5eead4" stroke-width="1.5" fill="none" />
+        <circle cx="14" cy="14" r="2.5" fill="#5eead4" />
+      </svg>
+    </div>
+    <div *ngIf="open || mobileOpen">
+      <span class="logo-name">DATA CENTER</span>
+      <span class="logo-sub">Cooperativas</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a *ngFor="let item of navItems" [routerLink]="item.route" class="nav-item"
+      [class.active]="isActive(item.route)"
+      [title]="!open && !mobileOpen ? item.label : ''"
+      (click)="onNavClick()">
+      <span class="nav-icon" [innerHTML]="item.safeSvg"></span>
+      <span class="nav-label" *ngIf="open || mobileOpen">{{ item.label }}</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-user" *ngIf="open || mobileOpen">
+    <div class="user-avatar" [style.background]="isAdmin ? '#7c3aed' : '#0d3b3e'">
+      {{ isAdmin ? 'A' : 'G' }}
+    </div>
+    <div>
+      <span class="user-name">{{ isAdmin ? 'Admin' : 'Gestora' }}</span>
+      <span class="user-sub">transcoop.es</span>
+    </div>
+  </div>
+
+  <button class="logout-btn" (click)="logout()" [title]="!open && !mobileOpen ? 'Cerrar sesión' : ''">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+    <span *ngIf="open || mobileOpen">Cerrar sesión</span>
+  </button>
+
+</aside>

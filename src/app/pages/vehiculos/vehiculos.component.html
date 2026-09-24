@@ -1,0 +1,121 @@
+<div class="page-header">
+  <div>
+    <div class="page-title">Vehículos</div>
+    <div class="page-subtitle">{{ filteredVehiculos.length }} vehículos mostrados</div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="search-wrapper">
+    <span class="search-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+    </span>
+    <input class="dc-input dc-input-search" placeholder="Buscar matrícula, marca, bastidor..."
+      (input)="onSearch($any($event.target).value)" />
+  </div>
+  <div class="v-divider"></div>
+  <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'TODOS'"
+    [style.background]="filterCoop === 'TODOS' ? '#6b7280' : ''" [style.color]="filterCoop === 'TODOS' ? '#fff' : ''"
+    [style.border-color]="filterCoop === 'TODOS' ? '#6b7280' : ''" (click)="setFilter('TODOS')">TODOS</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'TRANSCOOP'"
+    [style.background]="filterCoop === 'TRANSCOOP' ? '#0d3b3e' : ''"
+    [style.color]="filterCoop === 'TRANSCOOP' ? '#fff' : ''"
+    [style.border-color]="filterCoop === 'TRANSCOOP' ? '#0d3b3e' : ''"
+    (click)="setFilter('TRANSCOOP')">TRANSCOOP</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'ECOTRANSPORTE'"
+    [style.background]="filterCoop === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+    [style.color]="filterCoop === 'ECOTRANSPORTE' ? '#fff' : ''"
+    [style.border-color]="filterCoop === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+    (click)="setFilter('ECOTRANSPORTE')">ECOTRANSPORTE</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'CENTRALCOOP'"
+    [style.background]="filterCoop === 'CENTRALCOOP' ? '#d4580a' : ''"
+    [style.color]="filterCoop === 'CENTRALCOOP' ? '#fff' : ''"
+    [style.border-color]="filterCoop === 'CENTRALCOOP' ? '#d4580a' : ''"
+    (click)="setFilter('CENTRALCOOP')">CENTRALCOOP</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'ALQUITRUCK'"
+    [style.background]="filterCoop === 'ALQUITRUCK' ? '#0ea5e9' : ''"
+    [style.color]="filterCoop === 'ALQUITRUCK' ? '#fff' : ''"
+    [style.border-color]="filterCoop === 'ALQUITRUCK' ? '#0ea5e9' : ''"
+    (click)="setFilter('ALQUITRUCK')">ALQUITRUCK</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filterCoop === 'SITTRANS'"
+    [style.background]="filterCoop === 'SITTRANS' ? '#dc2626' : ''"
+    [style.color]="filterCoop === 'SITTRANS' ? '#fff' : ''"
+    [style.border-color]="filterCoop === 'SITTRANS' ? '#dc2626' : ''" (click)="setFilter('SITTRANS')">SITTRANS</button>
+  <div class="v-divider"></div>
+  <button class="btn btn-sm" [class.btn-ghost]="bajasEstado === 'ocultar'"
+    [ngStyle]="bajasEstado !== 'ocultar' ? {'background':'#fee2e2','color':'#991b1b','border':'1px solid #fecaca'} : {}"
+    (click)="toggleBajas()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+    {{ bajasEstado === 'ocultar' ? 'Mostrar bajas' : bajasEstado === 'mostrar' ? 'Ocultar bajas' : 'Solo bajas' }}
+    <span *ngIf="totalBajas > 0"
+      style="background:#991b1b;color:#fff;border-radius:10px;padding:0 5px;font-size:10px;margin-left:2px;">{{
+      totalBajas }}</span>
+  </button>
+  <div class="v-divider"></div>
+  <button class="btn btn-ghost btn-sm" (click)="exportarCSV()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+    Exportar CSV
+  </button>
+</div>
+
+<div class="dc-table-wrapper">
+  <table class="dc-table">
+    <thead>
+      <tr>
+        <th>Matrícula</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Bastidor</th>
+        <th>Fecha Mat.</th>
+        <th>Destinado a</th>
+        <th>Propiedad</th>
+        <th>Fecha ITV</th>
+        <th>Conductor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let v of filteredVehiculos" (click)="irAFicha(v.matricula)" class="clickable-row"
+        [style.opacity]="(v.estado || '').toUpperCase() === 'BAJA' ? '0.55' : '1'">
+        <td (click)="$event.stopPropagation()">
+          <a [routerLink]="['/vehiculos', v.matricula]" class="matricula-link">
+            <span class="matricula">{{ v.matricula }}</span>
+          </a>
+        </td>
+        <td style="font-weight:600; color:#0a0f2c;">{{ v.marca }}</td>
+        <td style="color:#111827;">{{ v.modelo }}</td>
+        <td class="mono" style="font-size:11px; color:#374151;">{{ v.bastidor }}</td>
+        <td class="mono" style="font-size:12px; color:#374151;">{{ v.fecha_mat || v.fechaMat }}</td>
+        <td><span class="coop-label" [ngClass]="coopClass(v.destinado_a || v.destinadoA)">{{ v.destinado_a ||
+            v.destinadoA }}</span></td>
+        <td style="font-size:12px; color:#111827;">{{ v.propiedad }}</td>
+        <td class="mono" style="font-size:12px; color:#374151;">{{ v.itv || '—' }}</td>
+        <td (click)="$event.stopPropagation()">
+          <ng-container *ngIf="conductorValido(v.conductor_actual); else sinCond">
+            <a [routerLink]="['/conductores', v.conductor_actual_id]" class="conductor-link">
+              <span *ngIf="v.tipo_conductor === 'ultimo'"
+                style="color:#8a96c4; font-size:10px; margin-right:4px;">ÚLT.</span>
+              {{ v.conductor_actual }}
+            </a>
+          </ng-container>
+          <ng-template #sinCond>
+            <span style="color:#8a96c4;">—</span>
+          </ng-template>
+        </td>
+      </tr>
+      <tr *ngIf="filteredVehiculos.length === 0">
+        <td colspan="9" style="text-align:center; color:#6b7280; padding:32px;">Sin resultados</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,99 @@
+<div class="page-header" style="display:flex; align-items:center; justify-content:space-between;">
+  <div>
+    <div class="page-title">Seguros</div>
+    <div class="page-subtitle">{{ filtered.length }} pólizas vigentes</div>
+  </div>
+  <button class="btn btn-ghost btn-sm" (click)="exportarCSV()" title="Exportar CSV">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    CSV
+  </button>
+</div>
+
+<div class="toolbar">
+  <div class="search-wrapper">
+    <span class="search-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+    </span>
+    <input class="dc-input dc-input-search" placeholder="Buscar póliza, matrícula, tomador..."
+      (input)="onSearch($any($event.target).value)" />
+  </div>
+  <div class="v-divider"></div>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroTipo === 'TODOS'"
+    [style.background]="filtroTipo === 'TODOS' ? '#6b7280' : ''" [style.color]="filtroTipo === 'TODOS' ? '#fff' : ''"
+    [style.border-color]="filtroTipo === 'TODOS' ? '#6b7280' : ''" (click)="setFiltroTipo('TODOS')">TODOS</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroTipo === 'CIRCULACION'"
+    [style.background]="filtroTipo === 'CIRCULACION' ? '#1d4ed8' : ''"
+    [style.color]="filtroTipo === 'CIRCULACION' ? '#fff' : ''"
+    [style.border-color]="filtroTipo === 'CIRCULACION' ? '#1d4ed8' : ''"
+    (click)="setFiltroTipo('CIRCULACION')">CIRCULACION</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroTipo === 'ASISTENCIA'"
+    [style.background]="filtroTipo === 'ASISTENCIA' ? '#0891b2' : ''"
+    [style.color]="filtroTipo === 'ASISTENCIA' ? '#fff' : ''"
+    [style.border-color]="filtroTipo === 'ASISTENCIA' ? '#0891b2' : ''"
+    (click)="setFiltroTipo('ASISTENCIA')">ASISTENCIA</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroTipo === 'DAÑOS'"
+    [style.background]="filtroTipo === 'DAÑOS' ? '#db2777' : ''" [style.color]="filtroTipo === 'DAÑOS' ? '#fff' : ''"
+    [style.border-color]="filtroTipo === 'DAÑOS' ? '#db2777' : ''" (click)="setFiltroTipo('DAÑOS')">DAÑOS</button>
+  <div class="v-divider"></div>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroCoop === 'TODOS'"
+    [style.background]="filtroCoop === 'TODOS' ? '#6b7280' : ''" [style.color]="filtroCoop === 'TODOS' ? '#fff' : ''"
+    [style.border-color]="filtroCoop === 'TODOS' ? '#6b7280' : ''" (click)="setFiltroCoop('TODOS')">TODOS</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroCoop === 'TRANSCOOP'"
+    [style.background]="filtroCoop === 'TRANSCOOP' ? '#0d3b3e' : ''"
+    [style.color]="filtroCoop === 'TRANSCOOP' ? '#fff' : ''"
+    [style.border-color]="filtroCoop === 'TRANSCOOP' ? '#0d3b3e' : ''"
+    (click)="setFiltroCoop('TRANSCOOP')">TRANSCOOP</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroCoop === 'ECOTRANSPORTE'"
+    [style.background]="filtroCoop === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+    [style.color]="filtroCoop === 'ECOTRANSPORTE' ? '#fff' : ''"
+    [style.border-color]="filtroCoop === 'ECOTRANSPORTE' ? '#18a04c' : ''"
+    (click)="setFiltroCoop('ECOTRANSPORTE')">ECOTRANSPORTE</button>
+  <button class="btn btn-ghost btn-sm" [class.active]="filtroCoop === 'CENTRALCOOP'"
+    [style.background]="filtroCoop === 'CENTRALCOOP' ? '#d4580a' : ''"
+    [style.color]="filtroCoop === 'CENTRALCOOP' ? '#fff' : ''"
+    [style.border-color]="filtroCoop === 'CENTRALCOOP' ? '#d4580a' : ''"
+    (click)="setFiltroCoop('CENTRALCOOP')">CENTRALCOOP</button>
+</div>
+
+<div class="dc-table-wrapper">
+  <table class="dc-table">
+    <thead>
+      <tr>
+        <th>Nº Póliza</th>
+        <th>Matrícula</th>
+        <th>Tomador</th>
+        <th>Tipo</th>
+        <th>Aseguradora</th>
+        <th>Corredor</th>
+        <th>Vencimiento</th>
+        <th>Ámbito</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let s of filtered">
+        <td class="mono" style="font-size:11px; color:#374151; white-space:nowrap;">{{ s.poliza }}</td>
+        <td>
+          <a *ngIf="s.matricula" [routerLink]="['/vehiculos', s.matricula]" style="text-decoration:none;">
+            <span class="matricula" style="cursor:pointer; border-color:#2563eb; color:#2563eb;">{{ s.matricula
+              }}</span>
+          </a>
+          <span *ngIf="!s.matricula" style="color:#8a96c4;">—</span>
+        </td>
+        <td><span class="coop-label" [ngClass]="coopClass(s.tomador)">{{ s.tomador }}</span></td>
+        <td style="color:#111827; white-space:nowrap;">{{ s.tipo }}</td>
+        <td style="font-weight:600; color:#0a0f2c;">{{ resolveAseguradora(s.aseguradora) }}</td>
+        <td style="color:#111827; white-space:nowrap;">{{ s.corredor }}</td>
+        <td class="mono" style="font-size:12px; color:#374151; white-space:nowrap;">{{ s.vencimiento }}</td>
+        <td style="color:#111827; font-size:12px; white-space:nowrap;">{{ s.ambito }}</td>
+        <td><span class="badge badge-activo">{{ s.estado }}</span></td>
+      </tr>
+      <tr *ngIf="filtered.length === 0">
+        <td colspan="9" style="text-align:center; color:#6b7280; padding:32px;">Sin resultados</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,21 @@
+.clickable-row { cursor: pointer; }
+.clickable-row:hover td { background: #f0f4ff !important; }
+
+.dc-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 0;
+}
+
+@media (max-width: 768px) {
+  .dc-table {
+    table-layout: auto !important;
+    min-width: 720px;
+  }
+
+  .dc-table td {
+    max-width: none;
+    white-space: nowrap;
+  }
+}

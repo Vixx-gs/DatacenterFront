@@ -1,0 +1,170 @@
+<div *ngIf="conductor">
+
+  <div class="ficha-header">
+    <button class="btn btn-ghost btn-sm" (click)="volver()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+      Volver
+    </button>
+    <div class="ficha-header-info">
+      <div class="ficha-nombre" [style.color]="conductor.estado === 'Ex-socio' ? '#dc2626' : ''">{{ conductor.nombre }}
+      </div>
+      <div class="ficha-estado-row">
+        <span class="badge"
+          [ngClass]="conductor.estado === 'Confirmado' && conductor.codigo_socio === 'DEFINITIVO' ? 'badge-activo' : 'badge-baja'"
+          style="font-size:13px; padding:4px 14px;">
+          {{ conductor.estado === 'Confirmado' && conductor.codigo_socio === 'DEFINITIVO' ? 'Activo' : 'Baja' }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ficha-grid-main">
+
+    <!-- COL IZQUIERDA -->
+    <div class="ficha-col">
+      <div class="ficha-card">
+        <div class="ficha-card-title">DATOS PERSONALES</div>
+        <div class="ficha-fields-2col">
+          <div class="ficha-field"><span class="ficha-field-label">Nombre</span><span class="ficha-field-value">{{
+              conductor.nombre_propio || conductor.nombre }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Apellidos</span><span class="ficha-field-value">{{
+              conductor.apellidos || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">NIF</span><span class="ficha-field-value mono">{{
+              conductor.nif || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Teléfono</span><span
+              class="ficha-field-value mono">{{ conductor.movil || '—' }}</span></div>
+          <div class="ficha-field" style="grid-column:span 2;"><span class="ficha-field-label">Email</span><span
+              class="ficha-field-value">{{ conductor.email || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Dirección</span><span class="ficha-field-value">{{
+              conductor.direccion || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Localidad</span><span class="ficha-field-value">{{
+              conductor.poblacion || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Provincia</span><span class="ficha-field-value">{{
+              conductor.provincia || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Código Postal</span><span
+              class="ficha-field-value mono">{{ conductor.codigo_postal || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">F. de Nacimiento</span><span
+              class="ficha-field-value mono">{{ formatFecha(conductor.fecha_nac) }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL DERECHA -->
+    <div class="ficha-col">
+      <div class="ficha-card">
+        <div class="ficha-card-title">SOCIO ACTUAL</div>
+        <div class="ficha-fields-2col">
+          <div class="ficha-field"><span class="ficha-field-label">Empresa</span><span class="ficha-field-value"><span
+                class="coop-label" [ngClass]="coopClass(conductor.empresa)">{{ conductor.empresa || '—' }}</span></span>
+          </div>
+          <div class="ficha-field"><span class="ficha-field-label">Nº de Socio</span><span
+              class="ficha-field-value mono">{{ conductor.num_socio || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Fecha de Alta</span><span
+              class="ficha-field-value mono">{{ formatFecha(conductor.fecha_prevista || conductor.fecha_inicio)
+              }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Fecha de Baja</span><span
+              class="ficha-field-value mono">{{ formatFecha(conductor.fecha_baja) || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Gestor</span><span class="ficha-field-value"><span
+                *ngIf="conductor.gestor && conductor.gestor !== '-'" class="gestor-badge">{{ conductor.gestor
+                }}</span><span *ngIf="!conductor.gestor || conductor.gestor === '-'"
+                style="color:#8a96c4;">—</span></span></div>
+
+        </div>
+      </div>
+
+      <div class="ficha-card" style="margin-top:12px;">
+        <div class="ficha-card-title">LABORAL</div>
+        <div class="ficha-fields-2col">
+          <div class="ficha-field"><span class="ficha-field-label">Última Descarga</span><span
+              class="ficha-field-value">—</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Póliza Mercancías</span><span
+              class="ficha-field-value">—</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Aseguradora</span><span
+              class="ficha-field-value">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VEHÍCULO ACTUAL -->
+  <div class="ficha-card" style="margin-top:12px;">
+    <div class="ficha-card-title">VEHÍCULO ACTUAL{{ vehiculosActivos.length > 1 ? 'ES' : '' }}</div>
+    <div *ngIf="vehiculosActivos.length > 0; else sinVehiculo">
+      <div class="dc-table-wrapper" style="margin-top:4px;">
+        <table class="dc-table">
+          <thead>
+            <tr>
+              <th>Matrícula</th>
+              <th>Desde</th>
+              <th>Tipo Contrato</th>
+              <th>Fecha Fin Contrato</th>
+              <th>Valor Residual</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let v of vehiculosActivos">
+              <td>
+                <a [routerLink]="['/vehiculos', v.vehiculo_id]" style="text-decoration:none;">
+                  <span class="matricula" style="cursor:pointer; border-color:#2563eb; color:#2563eb;">{{ v.vehiculo_id
+                    }}</span>
+                </a>
+              </td>
+              <td class="mono" style="font-size:12px; color:#374151;">{{ formatFecha(v.fecha_inicio) }}</td>
+              <td>
+                <span *ngIf="v.contrato" class="badge" [ngClass]="badgeClass(v.contrato.tipo_contrato)">{{
+                  v.contrato.tipo_contrato }}</span>
+                <span *ngIf="!v.contrato" style="color:#8a96c4;">—</span>
+              </td>
+              <td class="mono" style="font-size:12px; color:#374151;">{{ v.contrato ? formatFecha(v.contrato.fecha_fin)
+                : '—' }}</td>
+              <td style="color:#374151;">{{ v.contrato?.valor_residual ? (v.contrato.valor_residual | number:'1.0-0') +
+                ' €' : '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <ng-template #sinVehiculo>
+      <div class="ficha-empty">Sin vehículo asignado</div>
+    </ng-template>
+  </div>
+
+  <!-- HISTÓRICO VEHÍCULOS -->
+  <div class="ficha-card" style="margin-top:12px;">
+    <div class="ficha-card-title">HISTÓRICO VEHÍCULOS</div>
+    <div *ngIf="historialVehiculos.length > 0; else sinHistorial">
+      <div class="dc-table-wrapper" style="margin-top:4px;">
+        <table class="dc-table">
+          <thead>
+            <tr>
+              <th>VehículoID</th>
+              <th>FechaInicio</th>
+              <th>FechaFin</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let h of historialVehiculos">
+              <td>
+                <a [routerLink]="['/vehiculos', h.vehiculo_id]" style="text-decoration:none;">
+                  <span class="matricula" style="cursor:pointer; border-color:#2563eb; color:#2563eb;">{{ h.vehiculo_id
+                    }}</span>
+                </a>
+              </td>
+              <td class="mono" style="font-size:12px; color:#374151;">{{ formatFecha(h.fecha_inicio) }}</td>
+              <td class="mono" style="font-size:12px; color:#374151;">{{ h.fecha_fin ? formatFecha(h.fecha_fin) : '—' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <ng-template #sinHistorial>
+      <div class="ficha-empty">Sin historial de vehículos</div>
+    </ng-template>
+  </div>
+
+</div>
+<div *ngIf="!conductor && !loading" style="text-align:center; padding:60px; color:#6b7280;">Conductor no encontrado
+</div>

@@ -1,0 +1,10 @@
+.clickable-row { cursor: pointer; }
+.clickable-row:hover td { background: #f0f4ff !important; }
+
+.matricula-link { text-decoration: none; }
+.matricula-link:hover .matricula { border-color: #2563eb; color: #2563eb; }
+
+.conductor-link {
+  font-weight: 600; color: #2563eb; text-decoration: none; font-size: 12.5px;
+  &:hover { text-decoration: underline; }
+}

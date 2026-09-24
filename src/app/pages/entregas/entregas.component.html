@@ -1,0 +1,118 @@
+<div class="page-header" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+    <div>
+        <div class="page-title">Entregas</div>
+        <div class="page-subtitle">Movimientos de vehículos · {{ tituloMes }}</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px;">
+        <select [(ngModel)]="mesSelec" (ngModelChange)="load()"
+            style="padding:6px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:12px; color:#374151; background:#f9fafb;">
+            <option *ngFor="let m of meses; let i = index" [value]="i+1">{{ m }}</option>
+        </select>
+        <select [(ngModel)]="anioSelec" (ngModelChange)="load()"
+            style="padding:6px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:12px; color:#374151; background:#f9fafb;">
+            <option *ngFor="let a of aniosDisp" [value]="a">{{ a }}</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" (click)="exportarCSV()" title="Exportar CSV">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px; vertical-align:middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            CSV
+        </button>
+    </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+    <!-- ENTRADAS -->
+    <div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <div style="width:12px; height:12px; border-radius:50%; background:#16a34a;"></div>
+            <span style="font-size:13px; font-weight:700; color:#0a0f2c;">Entradas</span>
+            <span
+                style="background:#dcfce7; color:#16a34a; border-radius:10px; padding:2px 10px; font-size:11px; font-weight:600;">{{
+                entradas.length }}</span>
+        </div>
+        <div class="dc-table-wrapper" style="border:1.5px solid #bbf7d0;">
+            <table class="dc-table">
+                <thead style="background:#f0fdf4;">
+                    <tr>
+                        <th style="color:#16a34a;">Matrícula</th>
+                        <th style="color:#16a34a;">Conductor</th>
+                        <th style="color:#16a34a;">Fecha</th>
+                        <th style="color:#16a34a;">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let e of entradas" class="clickable-row" (click)="irAVehiculo(e.vehiculo_id)">
+                        <td (click)="$event.stopPropagation()">
+                            <a [routerLink]="['/vehiculos', e.vehiculo_id]" style="text-decoration:none;">
+                                <span class="matricula" style="border-color:#16a34a; color:#16a34a;">{{ e.vehiculo_id
+                                    }}</span>
+                            </a>
+                        </td>
+                        <td (click)="$event.stopPropagation()">
+                            <a *ngIf="e.conductor_id" [routerLink]="['/conductores', e.conductor_id]"
+                                class="link-conductor">
+                                {{ e.conductor }}
+                            </a>
+                            <span *ngIf="!e.conductor_id" style="color:#8a96c4;">—</span>
+                        </td>
+                        <td class="mono" style="font-size:11.5px; color:#16a34a; font-weight:600; white-space:nowrap;">
+                            {{ e.fecha }}</td>
+                        <td style="font-size:11px; color:#374151;">{{ e.accion || '—' }}</td>
+                    </tr>
+                    <tr *ngIf="entradas.length === 0">
+                        <td colspan="4" style="text-align:center; color:#6b7280; padding:24px;">Sin entradas este mes
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SALIDAS -->
+    <div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <div style="width:12px; height:12px; border-radius:50%; background:#dc2626;"></div>
+            <span style="font-size:13px; font-weight:700; color:#0a0f2c;">Salidas</span>
+            <span
+                style="background:#fee2e2; color:#dc2626; border-radius:10px; padding:2px 10px; font-size:11px; font-weight:600;">{{
+                salidas.length }}</span>
+        </div>
+        <div class="dc-table-wrapper" style="border:1.5px solid #fecaca;">
+            <table class="dc-table">
+                <thead style="background:#fff5f5;">
+                    <tr>
+                        <th style="color:#dc2626;">Matrícula</th>
+                        <th style="color:#dc2626;">Conductor</th>
+                        <th style="color:#dc2626;">Fecha</th>
+                        <th style="color:#dc2626;">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let s of salidas" class="clickable-row" (click)="irAVehiculo(s.vehiculo_id)">
+                        <td (click)="$event.stopPropagation()">
+                            <a [routerLink]="['/vehiculos', s.vehiculo_id]" style="text-decoration:none;">
+                                <span class="matricula" style="border-color:#dc2626; color:#dc2626;">{{ s.vehiculo_id
+                                    }}</span>
+                            </a>
+                        </td>
+                        <td (click)="$event.stopPropagation()">
+                            <a *ngIf="s.conductor_id" [routerLink]="['/conductores', s.conductor_id]"
+                                class="link-conductor">
+                                {{ s.conductor }}
+                            </a>
+                            <span *ngIf="!s.conductor_id" style="color:#8a96c4;">—</span>
+                        </td>
+                        <td class="mono" style="font-size:11.5px; color:#dc2626; font-weight:600; white-space:nowrap;">
+                            {{ s.fecha }}</td>
+                        <td style="font-size:11px; color:#374151;">{{ s.accion || '—' }}</td>
+                    </tr>
+                    <tr *ngIf="salidas.length === 0">
+                        <td colspan="4" style="text-align:center; color:#6b7280; padding:24px;">Sin salidas este mes
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

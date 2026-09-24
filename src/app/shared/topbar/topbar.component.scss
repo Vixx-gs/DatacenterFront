@@ -1,0 +1,58 @@
+.topbar {
+  background: #ffffff;
+  border-bottom: 1px solid #d0d7f0;
+  padding: 8px 20px;
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0; min-height: 48px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.topbar-spacer { flex: 1; }
+.topbar-date   { font-size: 11px; color: #6b7280; text-transform: capitalize; }
+
+.v-divider { width: 1px; height: 18px; background: #d0d7f0; margin: 0 4px; }
+
+.topbar-coops { display: flex; gap: 6px; }
+
+.coop-pill {
+  display: flex; align-items: center; gap: 5px;
+  background: #f5f7ff; border: 1px solid #d0d7f0;
+  border-radius: 6px; padding: 3px 10px;
+}
+
+.coop-pip   { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.coop-name  { font-size: 9.5px; font-weight: 700; color: #374151; letter-spacing: 0.06em; }
+.coop-count { font-size: 11px; font-weight: 700; color: #0a0f2c; margin-left: 3px; }
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #374151;
+  padding: 4px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  &:active { background: #f0f4ff; }
+}
+
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+
+  .topbar-date { display: none; }
+
+  .v-divider { display: none; }
+
+  .topbar-coops {
+    gap: 4px;
+
+    .coop-name { display: none; }
+
+    .coop-pill {
+      padding: 3px 7px;
+    }
+  }
+}
