@@ -88,7 +88,7 @@ export class VehiculosComponent implements OnInit {
       const matchCoop = this.filterCoop === 'TODOS' ||
         (this.filterCoop === 'ALQUITRUCK' ? prop === 'ALQUITRUCK' : dest === this.filterCoop);
       const q = this.searchVal.toLowerCase();
-      const matchSearch = !q || v.matricula?.toLowerCase().includes(q) || v.marca?.toLowerCase().includes(q) || v.bastidor?.toLowerCase().includes(q) || v.modelo?.toLowerCase().includes(q) || (v.gps || '').toLowerCase().includes(q);
+      const matchSearch = !q || v.matricula?.toLowerCase().includes(q) || v.marca?.toLowerCase().includes(q) || v.bastidor?.toLowerCase().includes(q) || v.modelo?.toLowerCase().includes(q);
       const esBaja = (v.estado || '').toUpperCase() === 'BAJA';
       const matchBaja = this.bajasEstado === 'solo' ? esBaja
         : this.bajasEstado === 'mostrar' ? true
@@ -118,7 +118,7 @@ export class VehiculosComponent implements OnInit {
   }
 
   exportarCSV() {
-    const headers = ['Matrícula', 'Marca', 'Modelo', 'Bastidor', 'Fecha Mat.', 'Destinado a', 'Propiedad', 'Fecha ITV', 'Conductor', 'GPS'];
+    const headers = ['Matrícula', 'Marca', 'Modelo', 'Bastidor', 'Fecha Mat.', 'Destinado a', 'Propiedad', 'Fecha ITV', 'Conductor'];
     const escape = (val: any) => `"${String(val ?? '').replace(/"/g, '""')}"`;
     const filas = this.filteredVehiculos.map(v => [
       v.matricula,
@@ -130,7 +130,6 @@ export class VehiculosComponent implements OnInit {
       v.propiedad,
       v.itv,
       v.conductor_actual,
-      v.gps,
     ].map(escape).join(','));
 
     const csv = '﻿' + [headers.map(escape).join(','), ...filas].join('\r\n');
