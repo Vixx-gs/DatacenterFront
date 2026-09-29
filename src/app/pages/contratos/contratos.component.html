@@ -131,8 +131,8 @@
           </a>
           <span *ngIf="!c.cliente_id" style="color:#8a96c4;">—</span>
         </td>
-        <td class="mono" style="font-size:12px; color:#374151; white-space:nowrap;">{{ c.fecha_inicio }}</td>
-        <td class="mono" style="font-size:12px; color:#374151; white-space:nowrap;">{{ c.fecha_fin || '—' }}</td>
+        <td class="mono" style="font-size:12px; color:#374151; white-space:nowrap;">{{ c.fecha_inicio | fechaEs }}</td>
+        <td class="mono" style="font-size:12px; color:#374151; white-space:nowrap;">{{ c.fecha_fin || '—' | fechaEs }}</td>
         <td style="color:#111827; text-align:center;">{{ c.num_cuotas || '—' }}</td>
         <td style="font-weight:700; color:#0a0f2c; white-space:nowrap;">{{ c.cuota_base ? (c.cuota_base |
           number:'1.2-2') + ' €' : '—' }}</td>

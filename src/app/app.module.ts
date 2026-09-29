@@ -27,6 +27,7 @@ import { IngresosComponent } from './pages/ingresos/ingresos.component';
 import { RegistroEmpresasComponent } from './pages/registro-empresas/registro-empresas.component';
 
 import { AuthInterceptor } from './core/auth.interceptor';
+import { FechaEsPipe } from './shared/pipes/fecha-es.pipe';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { PwaInstallComponent } from './shared/pwa-install/pwa-install.component';
 
@@ -54,6 +55,7 @@ import { PwaInstallComponent } from './shared/pwa-install/pwa-install.component'
     IngresosComponent,
     RegistroEmpresasComponent,
     PwaInstallComponent,
+    FechaEsPipe,
   ],
   imports: [
     BrowserModule,

@@ -39,9 +39,9 @@
           <div class="ficha-field"><span class="ficha-field-label">Bastidor</span><span class="ficha-field-value mono"
               style="font-size:11px;">{{ vehiculo.bastidor || '—' }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">F. Matriculación</span><span
-              class="ficha-field-value mono">{{ vehiculo.fecha_mat || '—' }}</span></div>
+              class="ficha-field-value mono">{{ vehiculo.fecha_mat || '—' | fechaEs }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Fecha ITV</span><span
-              class="ficha-field-value mono">{{ vehiculo.itv || '—' }}</span></div>
+              class="ficha-field-value mono">{{ vehiculo.itv || '—' | fechaEs }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Flota</span><span class="ficha-field-value"><span
                 class="coop-label" [ngClass]="coopClass(vehiculo.destinado_a)">{{ vehiculo.destinado_a || '—'
                 }}</span></span></div>
@@ -51,7 +51,7 @@
                 class="badge" [ngClass]="badgeClass(vehiculo.situacion)">{{ vehiculo.situacion || '—' }}</span></span>
           </div>
           <div class="ficha-field"><span class="ficha-field-label">F. Incorporación</span><span
-              class="ficha-field-value mono">{{ vehiculo.fecha_incorporacion || '—' }}</span></div>
+              class="ficha-field-value mono">{{ vehiculo.fecha_incorporacion || '—' | fechaEs }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Observaciones</span><span class="ficha-field-value"
               style="font-size:11.5px;">{{ vehiculo.observaciones || '—' }}</span></div>
         </div>
@@ -62,7 +62,7 @@
         <div class="ficha-card-title">GPS Y TACÓGRAFO</div>
         <div class="ficha-fields-2col">
           <div class="ficha-field"><span class="ficha-field-label">Próx. Inspección Tacógrafo</span><span
-              class="ficha-field-value">{{ vehiculo.tacografo || '—' }}</span></div>
+              class="ficha-field-value">{{ vehiculo.tacografo || '—' | fechaEs }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Descarga Tacógrafo</span><span
               class="ficha-field-value">—</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Kilómetros</span><span
@@ -201,19 +201,19 @@
     <div class="ficha-fields-3col" style="margin-bottom:14px;">
       <div class="ficha-field"><span class="ficha-field-label">Kilómetros</span><span class="ficha-field-value mono">{{ vehiculo.kilometros || '—' }}</span></div>
       <div class="ficha-field"><span class="ficha-field-label">Equipamiento</span><span class="ficha-field-value" style="font-size:11.5px;">{{ vehiculo.equipamiento || '—' }}</span></div>
-      <div class="ficha-field"><span class="ficha-field-label">F. Matriculación</span><span class="ficha-field-value mono">{{ garantias?.fecha_matriculacion || vehiculo.fecha_mat || '—' }}</span></div>
+      <div class="ficha-field"><span class="ficha-field-label">F. Matriculación</span><span class="ficha-field-value mono">{{ (garantias?.fecha_matriculacion || vehiculo.fecha_mat) | fechaEs }}</span></div>
     </div>
 
     <div class="ficha-group-label">Garantía</div>
     <div class="ficha-fields-3col" style="margin-bottom:14px;">
       <div class="ficha-field"><span class="ficha-field-label">Tipo garantía</span><span class="ficha-field-value">{{ garantias?.tipo_garantia || vehiculo.garantia || '—' }}</span></div>
-      <div class="ficha-field"><span class="ficha-field-label">Fin de garantía</span><span class="ficha-field-value mono">{{ garantias?.fecha_fin_garantia || vehiculo.fecha_fin_garantia || '—' }}</span></div>
+      <div class="ficha-field"><span class="ficha-field-label">Fin de garantía</span><span class="ficha-field-value mono">{{ (garantias?.fecha_fin_garantia || vehiculo.fecha_fin_garantia) | fechaEs }}</span></div>
       <div class="ficha-field"><span class="ficha-field-label">Km fin garantía</span><span class="ficha-field-value mono">{{ garantias?.km_fin_garantia || vehiculo.km_fin_garantia || '—' }}</span></div>
     </div>
 
     <div class="ficha-group-label">Mantenimiento</div>
     <div class="ficha-fields-3col">
-      <div class="ficha-field"><span class="ficha-field-label">F. fin Mto.</span><span class="ficha-field-value mono">{{ garantias?.fecha_fin_mto || vehiculo.fecha_fin_mto || '—' }}</span></div>
+      <div class="ficha-field"><span class="ficha-field-label">F. fin Mto.</span><span class="ficha-field-value mono">{{ (garantias?.fecha_fin_mto || vehiculo.fecha_fin_mto) | fechaEs }}</span></div>
       <div class="ficha-field"><span class="ficha-field-label">Km fin Mto.</span><span class="ficha-field-value mono">{{ garantias?.km_fin_mto || vehiculo.km_fin_mto || '—' }}</span></div>
       <div class="ficha-field">
         <span class="ficha-field-label">Precio Mto.</span>
@@ -238,8 +238,8 @@
     </div>
     <div *ngIf="contrato" class="ficha-fields-4col">
       <span class="mono" style="font-weight:700; color:#0a0f2c;">{{ contrato.num_contrato }}</span>
-      <span class="mono" style="color:#374151;">{{ formatFecha(contrato.fecha_inicio) }}</span>
-      <span class="mono" style="color:#374151;">{{ formatFecha(contrato.fecha_fin) || '—' }}</span>
+      <span class="mono" style="color:#374151;">{{ contrato.fecha_inicio | fechaEs }}</span>
+      <span class="mono" style="color:#374151;">{{ contrato.fecha_fin | fechaEs }}</span>
       <span><span class="badge" [ngClass]="badgeClass(contrato.tipo_contrato)">{{ contrato.tipo_contrato
           }}</span></span>
     </div>
@@ -255,8 +255,8 @@
     </div>
     <div *ngIf="financiera" class="ficha-fields-4col">
       <span class="mono" style="font-weight:700; color:#0a0f2c;">{{ financiera.num_contrato }}</span>
-      <span class="mono" style="color:#374151;">{{ formatFecha(financiera.fecha_inicio) || '—' }}</span>
-      <span class="mono" style="color:#374151;">{{ formatFecha(financiera.fecha_fin) || '—' }}</span>
+      <span class="mono" style="color:#374151;">{{ financiera.fecha_inicio | fechaEs }}</span>
+      <span class="mono" style="color:#374151;">{{ financiera.fecha_fin | fechaEs }}</span>
       <span><span class="badge" [ngClass]="badgeClass(financiera.tipo)">{{ financiera.tipo }}</span></span>
     </div>
     <div *ngIf="!financiera" class="ficha-empty">Sin contrato financiero registrado</div>
@@ -277,8 +277,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let h of historialConductores">
-            <td class="mono" style="font-size:12px; color:#374151;">{{ formatFecha(h.fecha_inicio) }}</td>
-            <td class="mono" style="font-size:12px; color:#374151;">{{ formatFecha(h.fecha_fin) || '—' }}</td>
+            <td class="mono" style="font-size:12px; color:#374151;">{{ h.fecha_inicio | fechaEs }}</td>
+            <td class="mono" style="font-size:12px; color:#374151;">{{ h.fecha_fin | fechaEs }}</td>
             <td>
               <a *ngIf="h.cliente_id" [routerLink]="['/conductores', h.cliente_id]" class="link-conductor">{{ h.nombre
                 }}</a>

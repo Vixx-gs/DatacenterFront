@@ -46,7 +46,7 @@
           <div class="ficha-field"><span class="ficha-field-label">Código Postal</span><span
               class="ficha-field-value mono">{{ conductor.codigo_postal || '—' }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">F. de Nacimiento</span><span
-              class="ficha-field-value mono">{{ formatFecha(conductor.fecha_nac) }}</span></div>
+              class="ficha-field-value mono">{{ conductor.fecha_nac | fechaEs }}</span></div>
         </div>
       </div>
     </div>
@@ -62,10 +62,10 @@
           <div class="ficha-field"><span class="ficha-field-label">Nº de Socio</span><span
               class="ficha-field-value mono">{{ conductor.num_socio || '—' }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Fecha de Alta</span><span
-              class="ficha-field-value mono">{{ formatFecha(conductor.fecha_prevista || conductor.fecha_inicio)
+              class="ficha-field-value mono">{{ conductor.fecha_prevista || conductor.fecha_inicio | fechaEs
               }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Fecha de Baja</span><span
-              class="ficha-field-value mono">{{ formatFecha(conductor.fecha_baja) || '—' }}</span></div>
+              class="ficha-field-value mono">{{ conductor.fecha_baja | fechaEs || '—' }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Gestor</span><span class="ficha-field-value"><span
                 *ngIf="conductor.gestor && conductor.gestor !== '-'" class="gestor-badge">{{ conductor.gestor
                 }}</span><span *ngIf="!conductor.gestor || conductor.gestor === '-'"
@@ -111,13 +111,13 @@
                     }}</span>
                 </a>
               </td>
-              <td class="mono" style="font-size:12px; color:#374151;">{{ formatFecha(v.fecha_inicio) }}</td>
+              <td class="mono" style="font-size:12px; color:#374151;">{{ v.fecha_inicio | fechaEs }}</td>
               <td>
                 <span *ngIf="v.contrato" class="badge" [ngClass]="badgeClass(v.contrato.tipo_contrato)">{{
                   v.contrato.tipo_contrato }}</span>
                 <span *ngIf="!v.contrato" style="color:#8a96c4;">—</span>
               </td>
-              <td class="mono" style="font-size:12px; color:#374151;">{{ v.contrato ? formatFecha(v.contrato.fecha_fin)
+              <td class="mono" style="font-size:12px; color:#374151;">{{ v.contrato ? v.contrato.fecha_fin | fechaEs
                 : '—' }}</td>
               <td style="color:#374151;">{{ v.contrato?.valor_residual ? (v.contrato.valor_residual | number:'1.0-0') +
                 ' €' : '—' }}</td>
@@ -152,8 +152,8 @@
                     }}</span>
                 </a>
               </td>
-              <td class="mono" style="font-size:12px; color:#374151;">{{ formatFecha(h.fecha_inicio) }}</td>
-              <td class="mono" style="font-size:12px; color:#374151;">{{ h.fecha_fin ? formatFecha(h.fecha_fin) : '—' }}
+              <td class="mono" style="font-size:12px; color:#374151;">{{ h.fecha_inicio | fechaEs }}</td>
+              <td class="mono" style="font-size:12px; color:#374151;">{{ h.fecha_fin ? h.fecha_fin | fechaEs : '—' }}
               </td>
             </tr>
           </tbody>

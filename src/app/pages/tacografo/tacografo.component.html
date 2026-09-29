@@ -95,7 +95,7 @@
                     <span *ngIf="!v.conductor_actual_id" style="color:#8a96c4;">—</span>
                 </td>
                 <td class="mono" style="font-size:12px; font-weight:600; color:#d97706;">
-                    {{ v.tacografo || 'Sin fecha' }}
+                    {{ v.tacografo || 'Sin fecha' | fechaEs }}
                 </td>
                 <td>
                     <span *ngIf="v.dias_restantes !== null && v.dias_restantes !== undefined"
@@ -161,7 +161,7 @@
                     <span *ngIf="!v.conductor_actual_id" style="color:#8a96c4;">—</span>
                 </td>
                 <td class="mono" style="font-size:12px; font-weight:600;" [style.color]="v.tacografo ? '#dc2626' : '#9ca3af'">
-                    {{ v.tacografo || 'Sin fecha' }}
+                    {{ v.tacografo || 'Sin fecha' | fechaEs }}
                 </td>
                 <td>
                     <span *ngIf="v.dias_caducada !== null && v.dias_caducada !== undefined"

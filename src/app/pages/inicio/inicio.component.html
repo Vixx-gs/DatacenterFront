@@ -185,8 +185,7 @@
                   c.empresa }}</span></td>
               <td><span class="gestor-badge" *ngIf="c.gestor">{{ c.gestor }}</span><span *ngIf="!c.gestor"
                   style="color:#8a96c4;">—</span></td>
-              <td class="mono" style="font-size:12px; color:#16a34a; font-weight:600;">{{ c.fecha_prevista ||
-                c.fecha_inicio }}</td>
+              <td class="mono" style="font-size:12px; color:#16a34a; font-weight:600;">{{ (c.fecha_prevista || c.fecha_inicio) | fechaEs }}</td>
               <td (click)="$event.stopPropagation()">
                 <a *ngFor="let v of getVehiculos(c.vehiculo)" [routerLink]="['/vehiculos', v]"
                   style="text-decoration:none; margin-right:4px;">
@@ -272,7 +271,7 @@
                   c.empresa }}</span></td>
               <td><span class="gestor-badge" *ngIf="c.gestor">{{ c.gestor }}</span><span *ngIf="!c.gestor"
                   style="color:#8a96c4;">—</span></td>
-              <td class="mono" style="font-size:12px; color:#dc2626; font-weight:600;">{{ c.fecha_baja }}</td>
+              <td class="mono" style="font-size:12px; color:#dc2626; font-weight:600;">{{ c.fecha_baja | fechaEs }}</td>
               <td (click)="$event.stopPropagation()">
                 <a *ngFor="let v of getVehiculos(c.vehiculo)" [routerLink]="['/vehiculos', v]"
                   style="text-decoration:none; margin-right:4px;">
