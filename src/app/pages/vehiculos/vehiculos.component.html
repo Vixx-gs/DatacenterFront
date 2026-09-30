@@ -55,8 +55,7 @@
     </svg>
     {{ bajasEstado === 'ocultar' ? 'Mostrar bajas' : bajasEstado === 'mostrar' ? 'Ocultar bajas' : 'Solo bajas' }}
     <span *ngIf="totalBajas > 0"
-      style="background:#991b1b;color:#fff;border-radius:10px;padding:0 5px;font-size:10px;margin-left:2px;">{{
-      totalBajas }}</span>
+      style="background:#991b1b;color:#fff;border-radius:10px;padding:0 5px;font-size:10px;margin-left:2px;">{{ totalBajas }}</span>
   </button>
   <div class="v-divider"></div>
   <button class="btn btn-ghost btn-sm" (click)="exportarCSV()">
@@ -95,11 +94,11 @@
         <td style="font-weight:600; color:#0a0f2c;">{{ v.marca }}</td>
         <td style="color:#111827;">{{ v.modelo }}</td>
         <td class="mono" style="font-size:11px; color:#374151;">{{ v.bastidor }}</td>
-        <td class="mono" style="font-size:12px; color:#374151;">{{ v.fecha_mat || v.fechaMat  | fechaEs }}</td>
+        <td class="mono" style="font-size:12px; color:#374151;">{{ (v.fecha_mat || v.fechaMat) | fechaEs }}</td>
         <td><span class="coop-label" [ngClass]="coopClass(v.destinado_a || v.destinadoA)">{{ v.destinado_a ||
             v.destinadoA }}</span></td>
         <td style="font-size:12px; color:#111827;">{{ v.propiedad }}</td>
-        <td class="mono" style="font-size:12px; color:#374151;">{{ v.itv || '—' | fechaEs }}</td>
+        <td class="mono" style="font-size:12px; color:#374151;">{{ v.itv | fechaEs }}</td>
         <td (click)="$event.stopPropagation()">
           <ng-container *ngIf="conductorValido(v.conductor_actual); else sinCond">
             <a [routerLink]="['/conductores', v.conductor_actual_id]" class="conductor-link">
