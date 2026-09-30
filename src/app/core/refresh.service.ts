@@ -1,12 +1,27 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Subject, interval, Subscription } from 'rxjs';
+
+const REFRESH_MS = 5 * 60 * 1000;
 
 @Injectable({ providedIn: 'root' })
-export class RefreshService {
-  private _refresh$ = new Subject<void>();
-  refresh$ = this._refresh$.asObservable();
+export class RefreshService implements OnDestroy {
+    private _refresh$ = new Subject<void>();
+    private timer: Subscription;
 
-  trigger() {
-    this._refresh$.next();
-  }
+    readonly refresh$ = this._refresh$.asObservable();
+
+    constructor() {
+        this.timer = interval(REFRESH_MS).subscribe(() => {
+            this._refresh$.next();
+        });
+    }
+
+    trigger() {
+        this._refresh$.next();
+    }
+
+    ngOnDestroy() {
+        this.timer?.unsubscribe();
+        this._refresh$.complete();
+    }
 }
