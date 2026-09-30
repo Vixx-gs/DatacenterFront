@@ -27,26 +27,16 @@
       <div class="ficha-card">
         <div class="ficha-card-title">DATOS PERSONALES</div>
         <div class="ficha-fields-2col">
-          <div class="ficha-field"><span class="ficha-field-label">Nombre</span><span class="ficha-field-value">{{
-              conductor.nombre_propio || conductor.nombre }}</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">Apellidos</span><span class="ficha-field-value">{{
-              conductor.apellidos || '—' }}</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">NIF</span><span class="ficha-field-value mono">{{
-              conductor.nif || '—' }}</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">Teléfono</span><span
-              class="ficha-field-value mono">{{ conductor.movil || '—' }}</span></div>
-          <div class="ficha-field" style="grid-column:span 2;"><span class="ficha-field-label">Email</span><span
-              class="ficha-field-value">{{ conductor.email || '—' }}</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">Dirección</span><span class="ficha-field-value">{{
-              conductor.direccion || '—' }}</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">Localidad</span><span class="ficha-field-value">{{
-              conductor.poblacion || '—' }}</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">Provincia</span><span class="ficha-field-value">{{
-              conductor.provincia || '—' }}</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">Código Postal</span><span
-              class="ficha-field-value mono">{{ conductor.codigo_postal || '—' }}</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">F. de Nacimiento</span><span
-              class="ficha-field-value mono">{{ conductor.fecha_nac | fechaEs }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Nombre</span><span class="ficha-field-value">{{ conductor.nombre_propio || conductor.nombre }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Apellidos</span><span class="ficha-field-value">{{ conductor.apellidos || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">NIF</span><span class="ficha-field-value mono">{{ conductor.nif || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Teléfono</span><span class="ficha-field-value mono">{{ conductor.movil || '—' }}</span></div>
+          <div class="ficha-field" style="grid-column:span 2;"><span class="ficha-field-label">Email</span><span class="ficha-field-value">{{ conductor.email || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Dirección</span><span class="ficha-field-value">{{ conductor.direccion || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Localidad</span><span class="ficha-field-value">{{ conductor.poblacion || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Provincia</span><span class="ficha-field-value">{{ conductor.provincia || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Código Postal</span><span class="ficha-field-value mono">{{ conductor.codigo_postal || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">F. de Nacimiento</span><span class="ficha-field-value mono">{{ conductor.fecha_nac | fechaEs }}</span></div>
         </div>
       </div>
     </div>
@@ -56,33 +46,20 @@
       <div class="ficha-card">
         <div class="ficha-card-title">SOCIO ACTUAL</div>
         <div class="ficha-fields-2col">
-          <div class="ficha-field"><span class="ficha-field-label">Empresa</span><span class="ficha-field-value"><span
-                class="coop-label" [ngClass]="coopClass(conductor.empresa)">{{ conductor.empresa || '—' }}</span></span>
-          </div>
-          <div class="ficha-field"><span class="ficha-field-label">Nº de Socio</span><span
-              class="ficha-field-value mono">{{ conductor.num_socio || '—' }}</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">Fecha de Alta</span><span
-              class="ficha-field-value mono">{{ (conductor.fecha_prevista || conductor.fecha_inicio) | fechaEs
-              }}</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">Fecha de Baja</span><span
-              class="ficha-field-value mono">{{ conductor.fecha_baja | fechaEs }}</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">Gestor</span><span class="ficha-field-value"><span
-                *ngIf="conductor.gestor && conductor.gestor !== '-'" class="gestor-badge">{{ conductor.gestor
-                }}</span><span *ngIf="!conductor.gestor || conductor.gestor === '-'"
-                style="color:#8a96c4;">—</span></span></div>
-
+          <div class="ficha-field"><span class="ficha-field-label">Empresa</span><span class="ficha-field-value"><span class="coop-label" [ngClass]="coopClass(conductor.empresa)">{{ conductor.empresa || '—' }}</span></span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Nº de Socio</span><span class="ficha-field-value mono">{{ conductor.num_socio || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Fecha de Alta</span><span class="ficha-field-value mono">{{ (conductor.fecha_prevista || conductor.fecha_inicio) | fechaEs }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Fecha de Baja</span><span class="ficha-field-value mono">{{ conductor.fecha_baja | fechaEs }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Gestor</span><span class="ficha-field-value"><span *ngIf="conductor.gestor && conductor.gestor !== '-'" class="gestor-badge">{{ conductor.gestor }}</span><span *ngIf="!conductor.gestor || conductor.gestor === '-'" style="color:#8a96c4;">—</span></span></div>
         </div>
       </div>
 
       <div class="ficha-card" style="margin-top:12px;">
         <div class="ficha-card-title">LABORAL</div>
         <div class="ficha-fields-2col">
-          <div class="ficha-field"><span class="ficha-field-label">Última Descarga</span><span
-              class="ficha-field-value">—</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">Póliza Mercancías</span><span
-              class="ficha-field-value">—</span></div>
-          <div class="ficha-field"><span class="ficha-field-label">Aseguradora</span><span
-              class="ficha-field-value">—</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Última Descarga</span><span class="ficha-field-value">—</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Póliza Mercancías</span><span class="ficha-field-value">—</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Aseguradora</span><span class="ficha-field-value">—</span></div>
         </div>
       </div>
     </div>
@@ -107,20 +84,16 @@
             <tr *ngFor="let v of vehiculosActivos">
               <td>
                 <a [routerLink]="['/vehiculos', v.vehiculo_id]" style="text-decoration:none;">
-                  <span class="matricula" style="cursor:pointer; border-color:#2563eb; color:#2563eb;">{{ v.vehiculo_id
-                    }}</span>
+                  <span class="matricula" style="cursor:pointer; border-color:#2563eb; color:#2563eb;">{{ v.vehiculo_id }}</span>
                 </a>
               </td>
               <td class="mono" style="font-size:12px; color:#374151;">{{ v.fecha_inicio | fechaEs }}</td>
               <td>
-                <span *ngIf="v.contrato" class="badge" [ngClass]="badgeClass(v.contrato.tipo_contrato)">{{
-                  v.contrato.tipo_contrato }}</span>
+                <span *ngIf="v.contrato" class="badge" [ngClass]="badgeClass(v.contrato.tipo_contrato)">{{ v.contrato.tipo_contrato }}</span>
                 <span *ngIf="!v.contrato" style="color:#8a96c4;">—</span>
               </td>
-              <td class="mono" style="font-size:12px; color:#374151;">{{ v.contrato ? v.contrato.fecha_fin | fechaEs
-                : '—' }}</td>
-              <td style="color:#374151;">{{ v.contrato?.valor_residual ? (v.contrato.valor_residual | number:'1.0-0') +
-                ' €' : '—' }}</td>
+              <td class="mono" style="font-size:12px; color:#374151;">{{ v.contrato ? (v.contrato.fecha_fin | fechaEs) : '—' }}</td>
+              <td style="color:#374151;">{{ v.contrato?.valor_residual ? (v.contrato.valor_residual | number:'1.0-0') + ' €' : '—' }}</td>
             </tr>
           </tbody>
         </table>
@@ -148,13 +121,11 @@
             <tr *ngFor="let h of historialVehiculos">
               <td>
                 <a [routerLink]="['/vehiculos', h.vehiculo_id]" style="text-decoration:none;">
-                  <span class="matricula" style="cursor:pointer; border-color:#2563eb; color:#2563eb;">{{ h.vehiculo_id
-                    }}</span>
+                  <span class="matricula" style="cursor:pointer; border-color:#2563eb; color:#2563eb;">{{ h.vehiculo_id }}</span>
                 </a>
               </td>
               <td class="mono" style="font-size:12px; color:#374151;">{{ h.fecha_inicio | fechaEs }}</td>
-              <td class="mono" style="font-size:12px; color:#374151;">{{ h.fecha_fin ? h.fecha_fin | fechaEs : '—' }}
-              </td>
+              <td class="mono" style="font-size:12px; color:#374151;">{{ h.fecha_fin ? (h.fecha_fin | fechaEs) : '—' }}</td>
             </tr>
           </tbody>
         </table>
