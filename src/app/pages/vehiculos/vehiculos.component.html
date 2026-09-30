@@ -55,8 +55,7 @@
     </svg>
     {{ bajasEstado === 'ocultar' ? 'Mostrar bajas' : bajasEstado === 'mostrar' ? 'Ocultar bajas' : 'Solo bajas' }}
     <span *ngIf="totalBajas > 0"
-      style="background:#991b1b;color:#fff;border-radius:10px;padding:0 5px;font-size:10px;margin-left:2px;">{{
-      totalBajas }}</span>
+      style="background:#991b1b;color:#fff;border-radius:10px;padding:0 5px;font-size:10px;margin-left:2px;">{{ totalBajas }}</span>
   </button>
   <div class="v-divider"></div>
   <button class="btn btn-ghost btn-sm" (click)="exportarCSV()">
