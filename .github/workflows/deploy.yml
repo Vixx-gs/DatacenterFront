@@ -40,3 +40,6 @@ jobs:
           source: "dist/datacenter/*"
           target: "/var/www/gesticotrans/datacenter-front/"
           strip_components: 2
+          overwrite: true
+          timeout: 120s
+          command_timeout: 15m
