@@ -37,7 +37,7 @@
           </a>
         </td>
         <td style="color:#374151; font-size:12px;">{{ r.tipo || r.tipo_vehiculo }}</td>
-        <td class="mono" style="font-size:12px; color:#374151;">{{ r.fechaMat || r.fecha_mat  | fechaEs }}</td>
+        <td class="mono" style="font-size:12px; color:#374151;">{{ (r.fechaMat || r.fecha_mat) | fechaEs }}</td>
         <td class="mono" style="font-size:11px; color:#374151;">{{ r.autorizacion }}</td>
         <td class="mono" style="font-size:12px; color:#374151;">{{ (r.fechaAdscripcion || r.fecha_adscripcion) | fechaEs }}</td>
         <td><span class="coop-label" [ngClass]="coopClass(r.empresa)">{{ r.empresa }}</span></td>

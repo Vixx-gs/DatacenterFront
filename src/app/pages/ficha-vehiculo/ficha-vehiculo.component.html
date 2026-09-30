@@ -39,9 +39,9 @@
           <div class="ficha-field"><span class="ficha-field-label">Bastidor</span><span class="ficha-field-value mono"
               style="font-size:11px;">{{ vehiculo.bastidor || '—' }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">F. Matriculación</span><span
-              class="ficha-field-value mono">{{ vehiculo.fecha_mat || '—' | fechaEs }}</span></div>
+              class="ficha-field-value mono">{{ vehiculo.fecha_mat | fechaEs }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Fecha ITV</span><span
-              class="ficha-field-value mono">{{ vehiculo.itv || '—' | fechaEs }}</span></div>
+              class="ficha-field-value mono">{{ vehiculo.itv | fechaEs }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Flota</span><span class="ficha-field-value"><span
                 class="coop-label" [ngClass]="coopClass(vehiculo.destinado_a)">{{ vehiculo.destinado_a || '—'
                 }}</span></span></div>
@@ -51,7 +51,7 @@
                 class="badge" [ngClass]="badgeClass(vehiculo.situacion)">{{ vehiculo.situacion || '—' }}</span></span>
           </div>
           <div class="ficha-field"><span class="ficha-field-label">F. Incorporación</span><span
-              class="ficha-field-value mono">{{ vehiculo.fecha_incorporacion || '—' | fechaEs }}</span></div>
+              class="ficha-field-value mono">{{ vehiculo.fecha_incorporacion | fechaEs }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Observaciones</span><span class="ficha-field-value"
               style="font-size:11.5px;">{{ vehiculo.observaciones || '—' }}</span></div>
         </div>
@@ -62,7 +62,7 @@
         <div class="ficha-card-title">GPS Y TACÓGRAFO</div>
         <div class="ficha-fields-2col">
           <div class="ficha-field"><span class="ficha-field-label">Próx. Inspección Tacógrafo</span><span
-              class="ficha-field-value">{{ vehiculo.tacografo || '—' | fechaEs }}</span></div>
+              class="ficha-field-value">{{ vehiculo.tacografo | fechaEs }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Descarga Tacógrafo</span><span
               class="ficha-field-value">—</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Kilómetros</span><span

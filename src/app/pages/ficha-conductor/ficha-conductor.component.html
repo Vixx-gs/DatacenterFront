@@ -62,10 +62,10 @@
           <div class="ficha-field"><span class="ficha-field-label">Nº de Socio</span><span
               class="ficha-field-value mono">{{ conductor.num_socio || '—' }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Fecha de Alta</span><span
-              class="ficha-field-value mono">{{ conductor.fecha_prevista || conductor.fecha_inicio | fechaEs
+              class="ficha-field-value mono">{{ (conductor.fecha_prevista || conductor.fecha_inicio) | fechaEs
               }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Fecha de Baja</span><span
-              class="ficha-field-value mono">{{ conductor.fecha_baja | fechaEs || '—' }}</span></div>
+              class="ficha-field-value mono">{{ conductor.fecha_baja | fechaEs }}</span></div>
           <div class="ficha-field"><span class="ficha-field-label">Gestor</span><span class="ficha-field-value"><span
                 *ngIf="conductor.gestor && conductor.gestor !== '-'" class="gestor-badge">{{ conductor.gestor
                 }}</span><span *ngIf="!conductor.gestor || conductor.gestor === '-'"
