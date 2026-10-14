@@ -3,6 +3,8 @@ name: Deploy Frontend
 # Cada push a master compila y publica en https://datacenter.gesticotrans.app
 # Los ficheros se suben a una carpeta temporal y se copian de golpe al sitio,
 # así la web nunca queda vacía a mitad de despliegue.
+# Acceso al servidor con la clave de despliegue (secreto SSH_KEY), no con la
+# contraseña de root: se revoca borrando su línea de /root/.ssh/authorized_keys.
 
 on:
   push:
@@ -36,7 +38,7 @@ jobs:
         with:
           host: 217.154.97.154
           username: root
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
           script: rm -rf ${{ env.INCOMING }} && mkdir -p ${{ env.INCOMING }}
 
       # Angular deja la app en dist/datacenter/browser
@@ -45,7 +47,7 @@ jobs:
         with:
           host: 217.154.97.154
           username: root
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
           source: "dist/datacenter/browser/*,dist/datacenter/browser/.htaccess"
           target: ${{ env.INCOMING }}
           strip_components: 3
@@ -58,7 +60,7 @@ jobs:
         with:
           host: 217.154.97.154
           username: root
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
             set -e
             test -f ${{ env.INCOMING }}/index.html
