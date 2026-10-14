@@ -1,9 +1,17 @@
 name: Deploy Frontend
 
+# Cada push a master compila y publica en https://datacenter.gesticotrans.app
+# Los ficheros se suben a una carpeta temporal y se copian de golpe al sitio,
+# así la web nunca queda vacía a mitad de despliegue.
+
 on:
   push:
     branches:
       - master
+
+env:
+  INCOMING: /var/www/vhosts/gesticotrans.app/datacenter-incoming
+  DOCROOT: /var/www/vhosts/gesticotrans.app/datacenter.gesticotrans.app
 
 jobs:
   deploy:
@@ -23,23 +31,40 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to VPS
+      - name: Prepare upload folder
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 217.154.97.154
           username: root
           password: ${{ secrets.SSH_PASSWORD }}
-          script: rm -rf /var/www/gesticotrans/datacenter-front/*
+          script: rm -rf ${{ env.INCOMING }} && mkdir -p ${{ env.INCOMING }}
 
+      # Angular deja la app en dist/datacenter/browser
       - name: Upload files
         uses: appleboy/scp-action@v0.1.7
         with:
           host: 217.154.97.154
           username: root
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "dist/datacenter/*"
-          target: "/var/www/gesticotrans/datacenter-front/"
-          strip_components: 2
+          source: "dist/datacenter/browser/*,dist/datacenter/browser/.htaccess"
+          target: ${{ env.INCOMING }}
+          strip_components: 3
           overwrite: true
           timeout: 120s
           command_timeout: 15m
+
+      - name: Publish
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 217.154.97.154
+          username: root
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            set -e
+            test -f ${{ env.INCOMING }}/index.html
+            test -f ${{ env.INCOMING }}/.htaccess
+            rsync -a --delete --chown=root-gesticoapp:psacln --chmod=D755,F644 ${{ env.INCOMING }}/ ${{ env.DOCROOT }}/
+            # La carpeta raíz del sitio conserva los permisos que pone Plesk
+            chown root-gesticoapp:psaserv ${{ env.DOCROOT }} && chmod 750 ${{ env.DOCROOT }}
+            rm -rf ${{ env.INCOMING }}
+            echo "Publicado: $(grep -o 'main-[A-Z0-9]*\.js' ${{ env.DOCROOT }}/index.html)"
