@@ -9,6 +9,7 @@ export class AuthService {
   private base = environment.apiUrl;
   private _token: string | null = null;  // Token en memoria, NO en localStorage
   private _usuario: string | null = null;
+  private _rol: string | null = null;     // rol del portal (solo con SSO)
   private inactivityTimer: any;
   private readonly INACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 minutos
 
@@ -36,6 +37,7 @@ export class AuthService {
       tap((res: any) => {
         this._token = res.token;
         this._usuario = res.usuario;
+        this._rol = res.rol || null;
         this.resetInactivityTimer();
       })
     );
@@ -64,6 +66,11 @@ export class AuthService {
 
   get token(): string | null { return this._token; }
   get usuario(): string | null { return this._usuario; }
+  /** admin | gestorT | gestor. Con el login antiguo se deduce de la cuenta compartida. */
+  get rol(): string | null {
+    if (this._rol) return this._rol;
+    return this._usuario === 'admin' ? 'admin' : this._usuario ? 'gestor' : null;
+  }
   get isLoggedIn(): boolean { return !!this._token; }
 
   private resetInactivityTimer() {

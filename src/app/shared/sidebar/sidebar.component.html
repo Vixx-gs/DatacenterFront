@@ -28,11 +28,11 @@
 
   <div class="sidebar-user" *ngIf="open || mobileOpen">
     <div class="user-avatar" [style.background]="isAdmin ? '#7c3aed' : '#0d3b3e'">
-      {{ isAdmin ? 'A' : 'G' }}
+      {{ (nombre || 'G').charAt(0).toUpperCase() }}
     </div>
     <div>
-      <span class="user-name">{{ isAdmin ? 'Admin' : 'Gestora' }}</span>
-      <span class="user-sub">transcoop.es</span>
+      <span class="user-name">{{ nombre }}</span>
+      <span class="user-sub">{{ rolLabel }}</span>
     </div>
   </div>
 

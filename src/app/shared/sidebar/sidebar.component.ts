@@ -44,7 +44,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
     if (this.ui.isMobile) this.ui.closeMobileNav();
   }
 
-  get isAdmin(): boolean { return this.auth.usuario === 'admin'; }
+  get isAdmin(): boolean { return this.auth.rol === 'admin'; }
+  get nombre(): string { return this.auth.usuario || ''; }
+  get rolLabel(): string {
+    return { admin: 'Administrador', gestorT: 'Gestor 24 h', gestor: 'Gestor' }[this.auth.rol || ''] || '';
+  }
 
   logout() { this.auth.salir(); }
 
