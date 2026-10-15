@@ -146,3 +146,25 @@
   color: #9ca3af;
   margin-top: 24px;
 }
+
+.portal-link {
+  display: block;
+  margin-top: 14px;
+  text-align: center;
+  font-size: 13px;
+  color: #0d3b3e;
+  opacity: 0.8;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 1;
+    text-decoration: underline;
+  }
+}
+
+.portal-check {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  padding: 24px 0;
+}

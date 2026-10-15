@@ -13,7 +13,9 @@
       {{ sessionMsg }}
     </div>
 
-    <div class="login-form">
+    <p class="portal-check" *ngIf="comprobandoPortal">Comprobando tu sesión del portal…</p>
+
+    <div class="login-form" *ngIf="!comprobandoPortal">
       <div class="form-group">
         <label class="form-label">Usuario</label>
         <input
@@ -54,6 +56,7 @@
         <span *ngIf="!loading">Iniciar sesión</span>
         <span *ngIf="loading" class="spinner"></span>
       </button>
+      <a class="portal-link" href="https://gesticotrans.app">Entrar con el Portal del Empleado</a>
     </div>
 
     <div class="login-footer">

@@ -29,6 +29,26 @@ export class AuthService {
     );
   }
 
+  /** Entra con la sesión del Portal del Empleado (cookie enviada por el navegador). */
+  loginSso(): Observable<any> {
+    // Con cuerpo: el cortafuegos (ModSecurity) bloquea los POST sin Content-Length.
+    return this.http.post(`${this.base}/auth/sso`, {}).pipe(
+      tap((res: any) => {
+        this._token = res.token;
+        this._usuario = res.usuario;
+        this.resetInactivityTimer();
+      })
+    );
+  }
+
+  /** Botón "Cerrar sesión": cierra la sesión de Datacenter y vuelve al portal. */
+  salir() {
+    this._token = null;
+    this._usuario = null;
+    clearTimeout(this.inactivityTimer);
+    window.location.href = 'https://gesticotrans.app';
+  }
+
   logout(reason?: 'inactivity' | 'horario') {
     this._token = null;
     this._usuario = null;

@@ -14,6 +14,8 @@ export class LoginComponent implements OnInit {
   loading  = false;
   showPassword = false;
   sessionMsg = '';
+  // Mientras se comprueba la sesión del Portal del Empleado no se enseña el formulario.
+  comprobandoPortal = false;
 
   constructor(
     private auth: AuthService,
@@ -32,6 +34,19 @@ export class LoginComponent implements OnInit {
     } else if (reason === 'horario') {
       this.sessionMsg = 'Acceso solo permitido de 8:00 a 18:00h. Tu sesión ha sido cerrada.';
     }
+    // Tras cerrar por inactividad u horario no se vuelve a entrar solo.
+    if (reason) return;
+
+    this.comprobandoPortal = true;
+    this.auth.loginSso().subscribe({
+      next: () => this.router.navigate(['/inicio']),
+      error: (err) => {
+        this.comprobandoPortal = false;
+        if (err.status === 403 && /8:00/.test(err.error?.detail || '')) {
+          this.sessionMsg = 'Acceso solo permitido de 8:00 a 18:00h.';
+        }
+      }
+    });
   }
 
   login() {

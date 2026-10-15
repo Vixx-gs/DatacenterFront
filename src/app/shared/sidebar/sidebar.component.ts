@@ -46,7 +46,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   get isAdmin(): boolean { return this.auth.usuario === 'admin'; }
 
-  logout() { this.auth.logout(); }
+  logout() { this.auth.salir(); }
 
   isActive(route: string): boolean {
     return this.router.isActive(route, {
