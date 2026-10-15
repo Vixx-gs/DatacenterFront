@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   // Mientras se comprueba la sesión del Portal del Empleado no se enseña el formulario.
   comprobandoPortal = false;
   // En *.gesticotrans.app solo se entra por el Portal del Empleado (sin formulario).
-  readonly soloPortal = window.location.hostname.endsWith('.gesticotrans.app');
+  get soloPortal() { return this.auth.soloPortal; }
   aviso = '';
 
   constructor(
@@ -37,42 +37,36 @@ export class LoginComponent implements OnInit {
     } else if (reason === 'horario') {
       this.sessionMsg = 'Acceso solo permitido de 8:00 a 18:00h. Tu sesión ha sido cerrada.';
     }
-    // Tras cerrar por inactividad u horario no se vuelve a entrar solo.
-    if (reason) return;
+    // Tras cerrar por inactividad u horario se enseña el aviso (y el botón al portal).
+    // Fuera de *.gesticotrans.app (.com, local) se usa el formulario de siempre.
+    if (reason || !this.soloPortal) return;
 
+    const pase = this.auth.tomarPase();
+    if (!pase) {
+      // Sin pase (URL escrita, marcador…): solo se entra desde el portal.
+      this.comprobandoPortal = true;
+      this.auth.irAlPortal();
+      return;
+    }
     this.comprobandoPortal = true;
-    this.auth.loginSso().subscribe({
-      next: () => {
-        sessionStorage.removeItem('dc_portal_redirect_at');
-        this.router.navigate(['/inicio']);
-      },
+    this.auth.loginSso(pase).subscribe({
+      next: () => this.router.navigate(['/inicio']),
       error: (err) => {
         const detalle = err.error?.detail || '';
+        if (err.status === 401) {
+          this.auth.irAlPortal();
+          return;
+        }
         if (err.status === 403 && /8:00/.test(detalle)) {
           this.sessionMsg = 'Acceso solo permitido de 8:00 a 18:00h.';
-        } else if (this.soloPortal) {
-          if (err.status === 401) {
-            if (this.irAlPortal()) return;   // se queda en "Comprobando…"
-            this.aviso = 'No se ha podido iniciar sesión con el Portal del Empleado. Inténtalo de nuevo desde el portal.';
-          } else if (err.status === 403) {
-            this.aviso = detalle || 'No tienes acceso a Datacenter.';
-          } else {
-            this.aviso = 'No se ha podido conectar con el Portal del Empleado. Inténtalo de nuevo en unos minutos.';
-          }
+        } else if (err.status === 403) {
+          this.aviso = detalle || 'No tienes acceso a Datacenter.';
+        } else {
+          this.aviso = 'No se ha podido conectar con el Portal del Empleado. Inténtalo de nuevo en unos minutos.';
         }
         this.comprobandoPortal = false;
       }
     });
-  }
-
-  /** Al login del portal, que devolverá aquí. false si ya se intentó hace < 20 s (evita bucles). */
-  private irAlPortal(): boolean {
-    const last = Number(sessionStorage.getItem('dc_portal_redirect_at') || 0);
-    if (Date.now() - last < 20000) return false;
-    sessionStorage.setItem('dc_portal_redirect_at', String(Date.now()));
-    const vuelta = `${window.location.origin}/inicio`;
-    window.location.href = `https://gesticotrans.app/?next=${encodeURIComponent(vuelta)}`;
-    return true;
   }
 
   login() {
