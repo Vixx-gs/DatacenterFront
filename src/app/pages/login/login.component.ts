@@ -16,6 +16,9 @@ export class LoginComponent implements OnInit {
   sessionMsg = '';
   // Mientras se comprueba la sesión del Portal del Empleado no se enseña el formulario.
   comprobandoPortal = false;
+  // En *.gesticotrans.app solo se entra por el Portal del Empleado (sin formulario).
+  readonly soloPortal = window.location.hostname.endsWith('.gesticotrans.app');
+  aviso = '';
 
   constructor(
     private auth: AuthService,
@@ -39,14 +42,37 @@ export class LoginComponent implements OnInit {
 
     this.comprobandoPortal = true;
     this.auth.loginSso().subscribe({
-      next: () => this.router.navigate(['/inicio']),
+      next: () => {
+        sessionStorage.removeItem('dc_portal_redirect_at');
+        this.router.navigate(['/inicio']);
+      },
       error: (err) => {
-        this.comprobandoPortal = false;
-        if (err.status === 403 && /8:00/.test(err.error?.detail || '')) {
+        const detalle = err.error?.detail || '';
+        if (err.status === 403 && /8:00/.test(detalle)) {
           this.sessionMsg = 'Acceso solo permitido de 8:00 a 18:00h.';
+        } else if (this.soloPortal) {
+          if (err.status === 401) {
+            if (this.irAlPortal()) return;   // se queda en "Comprobando…"
+            this.aviso = 'No se ha podido iniciar sesión con el Portal del Empleado. Inténtalo de nuevo desde el portal.';
+          } else if (err.status === 403) {
+            this.aviso = detalle || 'No tienes acceso a Datacenter.';
+          } else {
+            this.aviso = 'No se ha podido conectar con el Portal del Empleado. Inténtalo de nuevo en unos minutos.';
+          }
         }
+        this.comprobandoPortal = false;
       }
     });
+  }
+
+  /** Al login del portal, que devolverá aquí. false si ya se intentó hace < 20 s (evita bucles). */
+  private irAlPortal(): boolean {
+    const last = Number(sessionStorage.getItem('dc_portal_redirect_at') || 0);
+    if (Date.now() - last < 20000) return false;
+    sessionStorage.setItem('dc_portal_redirect_at', String(Date.now()));
+    const vuelta = `${window.location.origin}/inicio`;
+    window.location.href = `https://gesticotrans.app/?next=${encodeURIComponent(vuelta)}`;
+    return true;
   }
 
   login() {

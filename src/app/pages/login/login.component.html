@@ -15,7 +15,12 @@
 
     <p class="portal-check" *ngIf="comprobandoPortal">Comprobando tu sesión del portal…</p>
 
-    <div class="login-form" *ngIf="!comprobandoPortal">
+    <div class="login-form" *ngIf="!comprobandoPortal && soloPortal">
+      <div class="session-alert" *ngIf="aviso">{{ aviso }}</div>
+      <a class="login-btn portal-btn" href="https://gesticotrans.app">Ir al Portal del Empleado</a>
+    </div>
+
+    <div class="login-form" *ngIf="!comprobandoPortal && !soloPortal">
       <div class="form-group">
         <label class="form-label">Usuario</label>
         <input
