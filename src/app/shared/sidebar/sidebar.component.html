@@ -1,6 +1,6 @@
 <div class="sidebar-overlay" *ngIf="mobileOpen" (click)="closeMobile()"></div>
 
-<aside class="sidebar" [class.collapsed]="!open" [class.mobile-open]="mobileOpen">
+<aside data-gt-original class="sidebar" [class.collapsed]="!open" [class.mobile-open]="mobileOpen">
 
   <div class="sidebar-logo">
     <div class="logo-icon">
@@ -35,6 +35,11 @@
       <span class="user-sub">{{ rolLabel }}</span>
     </div>
   </div>
+
+  <a *ngIf="soloPortal" class="logout-btn portal-btn" href="https://gesticotrans.app" [title]="!open && !mobileOpen ? 'Portal del Empleado' : ''">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></svg>
+    <span *ngIf="open || mobileOpen">Portal del Empleado</span>
+  </a>
 
   <button class="logout-btn" (click)="logout()" [title]="!open && !mobileOpen ? 'Cerrar sesión' : ''">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

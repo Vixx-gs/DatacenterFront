@@ -14,6 +14,8 @@ import { UiService } from '../../core/ui.service';
 export class SidebarComponent implements OnInit, OnDestroy {
   open = true;
   mobileOpen = false;
+  /** En *.gesticotrans.app se muestra el botón para volver al Portal del Empleado. */
+  readonly soloPortal = window.location.hostname.endsWith('.gesticotrans.app');
   navItems: (NavItem & { safeSvg: SafeHtml })[];
   private sub!: Subscription;
 

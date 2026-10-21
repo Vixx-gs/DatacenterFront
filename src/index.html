@@ -23,6 +23,22 @@
   <!-- Microsoft Tiles -->
   <meta name="msapplication-TileImage" content="assets/icons/icon-144x144.png">
   <meta name="msapplication-TileColor" content="#0f2444">
+    <!-- Modo oscuro compartido con el Portal del Empleado (cookie gt_tema de *.gesticotrans.app;
+         sin elección, el del sistema). Es automático: invierte los colores salvo imágenes,
+         lienzos (PDF, firmas) y las zonas marcadas con data-gt-original, que ya son oscuras. -->
+    <style>
+      html.gt-oscuro { background: #fff; filter: invert(1) hue-rotate(180deg); }
+      html.gt-oscuro :is(img, video, canvas, picture, iframe, [data-gt-original]) { filter: invert(1) hue-rotate(180deg); }
+      html.gt-oscuro [data-gt-original] :is(img, video, canvas, picture, iframe) { filter: none; }
+    </style>
+    <script>
+      (function () {
+        if (!/\.gesticotrans\.app$/.test(location.hostname)) return;
+        var m = document.cookie.match(/(?:^|; )gt_tema=(claro|oscuro)/);
+        var oscuro = m ? m[1] === 'oscuro' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (oscuro) document.documentElement.classList.add('gt-oscuro');
+      })();
+    </script>
 </head>
 <body>
   <app-root></app-root>
