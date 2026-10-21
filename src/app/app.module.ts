@@ -28,7 +28,6 @@ import { RegistroEmpresasComponent } from './pages/registro-empresas/registro-em
 
 import { AuthInterceptor } from './core/auth.interceptor';
 import { FechaEsPipe } from './shared/pipes/fecha-es.pipe';
-import { ServiceWorkerModule } from '@angular/service-worker';
 import { PwaInstallComponent } from './shared/pwa-install/pwa-install.component';
 
 @NgModule({
@@ -61,13 +60,7 @@ import { PwaInstallComponent } from './shared/pwa-install/pwa-install.component'
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    }),
+    AppRoutingModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
