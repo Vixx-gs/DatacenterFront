@@ -15,25 +15,7 @@ export class FichaConductorComponent implements OnInit {
   contratos: any[] = [];
   loading = true;
 
-  // Vehículos activos: sin fecha_fin
-  get vehiculosActivos(): any[] {
-    const activos = this.historialVehiculos.filter(h => !h.fecha_fin);
-    if (activos.length > 0) {
-      return activos.map(h => ({
-        ...h,
-        contrato: this.contratos.find(c => c.vehiculo_id === h.vehiculo_id) || null
-      }));
-    }
-    // Fallback: usar campo vehiculo del conductor si no hay historial activo
-    if (this.conductor?.vehiculo && this.conductor.vehiculo !== '—') {
-      const ultimo = this.historialVehiculos
-        .filter(h => h.fecha_fin)
-        .sort((a, b) => (b.fecha_fin || '').localeCompare(a.fecha_fin || ''))[0];
-      const contrato = this.contratos.find(c => c.vehiculo_id === this.conductor.vehiculo) || null;
-      return [{ vehiculo_id: this.conductor.vehiculo, fecha_inicio: ultimo?.fecha_inicio || null, fecha_fin: null, contrato }];
-    }
-    return [];
-  }
+  vehiculosActivos: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -47,6 +29,7 @@ export class FichaConductorComponent implements OnInit {
     forkJoin({
       conductor: this.api.getConductor(id),
       historial: this.api.getHistorialVehiculos(id),
+      actuales:  this.api.getVehiculosActuales(id),
       contratos: this.api.getContratos(),
     }).subscribe({
       next: (res) => {
@@ -57,10 +40,21 @@ export class FichaConductorComponent implements OnInit {
           return new Date(b.fecha_fin).getTime() - new Date(a.fecha_fin).getTime();
         });
         this.contratos          = res.contratos.filter((c: any) => c.cliente_id === id);
+        // Vehículos actuales: los de las fichas de Cartera+, con su contrato de alquiler vigente
+        // (o el más reciente) emparejado por matrícula
+        this.vehiculosActivos   = (res.actuales || []).map((v: any) => {
+          const mat = this.norm(v.vehiculo_id);
+          const delVehiculo = res.contratos.filter((c: any) => this.norm(c.vehiculo_id) === mat);
+          return { ...v, contrato: delVehiculo.find((c: any) => !c.fecha_fin) || delVehiculo[0] || null };
+        });
         this.loading            = false;
       },
       error: () => { this.conductor = null; this.loading = false; }
     });
+  }
+
+  private norm(m: string): string {
+    return (m || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
   }
 
   formatFecha(fecha: string): string {

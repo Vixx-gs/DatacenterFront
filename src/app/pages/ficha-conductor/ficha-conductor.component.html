@@ -75,6 +75,7 @@
             <tr>
               <th>Matrícula</th>
               <th>Desde</th>
+              <th>Relación</th>
               <th>Tipo Contrato</th>
               <th>Fecha Fin Contrato</th>
               <th>Valor Residual</th>
@@ -88,6 +89,7 @@
                 </a>
               </td>
               <td class="mono" style="font-size:12px; color:#374151;">{{ v.fecha_inicio | fechaEs }}</td>
+              <td style="font-size:12px; color:#374151;">{{ v.rol || '—' }}<span *ngIf="v.situacion === 'NUEVO'" style="color:#8a96c4;"> (nuevo)</span></td>
               <td>
                 <span *ngIf="v.contrato" class="badge" [ngClass]="badgeClass(v.contrato.tipo_contrato)">{{ v.contrato.tipo_contrato }}</span>
                 <span *ngIf="!v.contrato" style="color:#8a96c4;">—</span>

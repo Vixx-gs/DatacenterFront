@@ -97,6 +97,10 @@ export class ApiService {
     return this.http.get<any[]>(`${this.base}/conductores/${id}/historial-vehiculos`);
   }
 
+  getVehiculosActuales(id: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.base}/conductores/${id}/vehiculos-actuales`);
+  }
+
   getHistorialConductores(matricula: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.base}/vehiculos/${matricula}/historial`);
   }
