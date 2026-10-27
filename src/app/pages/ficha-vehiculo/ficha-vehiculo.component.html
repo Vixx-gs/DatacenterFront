@@ -236,14 +236,14 @@
       <span style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase;">Fecha Fin</span>
       <span style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase;">Tipo Contrato</span>
     </div>
-    <div *ngIf="contrato" class="ficha-fields-4col">
+    <div *ngFor="let contrato of contratos" class="ficha-fields-4col">
       <span class="mono" style="font-weight:700; color:#0a0f2c;">{{ contrato.num_contrato }}</span>
       <span class="mono" style="color:#374151;">{{ contrato.fecha_inicio | fechaEs }}</span>
       <span class="mono" style="color:#374151;">{{ contrato.fecha_fin | fechaEs }}</span>
       <span><span class="badge" [ngClass]="badgeClass(contrato.tipo_contrato)">{{ contrato.tipo_contrato
           }}</span></span>
     </div>
-    <div *ngIf="!contrato" class="ficha-empty">Sin contrato registrado</div>
+    <div *ngIf="!contratos.length" class="ficha-empty">Sin contrato registrado</div>
 
     <!-- CONTRATO FINANCIERA — misma estructura que Contrato Socio -->
     <div class="ficha-fields-4col"
@@ -253,13 +253,13 @@
       <span style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase;">Fecha Fin</span>
       <span style="font-size:10px; font-weight:700; color:#8a96c4; text-transform:uppercase;">Tipo Contrato</span>
     </div>
-    <div *ngIf="financiera" class="ficha-fields-4col">
+    <div *ngFor="let financiera of financieras" class="ficha-fields-4col">
       <span class="mono" style="font-weight:700; color:#0a0f2c;">{{ financiera.num_contrato }}</span>
       <span class="mono" style="color:#374151;">{{ financiera.fecha_inicio | fechaEs }}</span>
       <span class="mono" style="color:#374151;">{{ financiera.fecha_fin | fechaEs }}</span>
       <span><span class="badge" [ngClass]="badgeClass(financiera.tipo)">{{ financiera.tipo }}</span></span>
     </div>
-    <div *ngIf="!financiera" class="ficha-empty">Sin contrato financiero registrado</div>
+    <div *ngIf="!financieras.length" class="ficha-empty">Sin contrato financiero registrado</div>
   </div>
 
   <!-- HISTÓRICO SOCIOS -->

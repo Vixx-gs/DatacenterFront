@@ -21,8 +21,9 @@ const ASEGURADORAS: Record<string, string> = {
 export class FichaVehiculoComponent implements OnInit {
   vehiculo: any;
   seguros: any[] = [];
-  financiera: any;
-  contrato: any;
+  // Todos los contratos del vehículo, como en Cartera+ (del más reciente al más antiguo)
+  financieras: any[] = [];
+  contratos: any[] = [];
   historialConductores: any[] = [];
   conductorDetalle: any = null;
   garantias: any = null;
@@ -49,8 +50,8 @@ export class FichaVehiculoComponent implements OnInit {
       next: (res) => {
         this.vehiculo = res.vehiculo;
         this.seguros = res.seguros;
-        this.financiera = res.financieras[0];
-        this.contrato = res.contratos.find((c: any) => !c.fecha_fin) || res.contratos[0];
+        this.financieras = this.porFechaInicio(res.financieras || []);
+        this.contratos = this.porFechaInicio(res.contratos || []);
         this.garantias = res.garantias && Object.keys(res.garantias).length > 0 ? res.garantias : null;
         this.historialConductores = (res.historial || []).sort((a: any, b: any) => {
           if (!a.fecha_fin) return -1;
@@ -115,5 +116,14 @@ export class FichaVehiculoComponent implements OnInit {
     if (!t) return false;
     if (/^[\s\-–—‐‑‒]+$/.test(t)) return false;
     return true;
+  }
+
+  /** Del más reciente al más antiguo (fechas DD/MM/AAAA o AAAA-MM-DD). */
+  private porFechaInicio(lista: any[]): any[] {
+    const clave = (f: string) => {
+      const m = String(f || '').match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      return m ? `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}` : String(f || '');
+    };
+    return [...lista].sort((a, b) => clave(b.fecha_inicio).localeCompare(clave(a.fecha_inicio)));
   }
 }
