@@ -37,7 +37,8 @@ export class TelefonosComponent implements OnInit {
 
   constructor(private auth: AuthService, private api: ApiService) {}
 
-  get isAdmin(): boolean { return this.auth.usuario === 'admin'; }
+  // Datacenter es solo de consulta: los teléfonos se añaden y editan en Cartera+.
+  get isAdmin(): boolean { return false; }
 
   ngOnInit() {
     // Cargar teléfonos guardados en la BD y añadirlos a la lista
