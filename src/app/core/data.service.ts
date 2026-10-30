@@ -22,7 +22,7 @@ export class DataService {
   readonly navItems: NavItem[] = [
     { id: 'inicio', label: 'INICIO', svg: SVG.home, route: '/inicio' },
     { id: 'vehiculos', label: 'VEHICULOS', svg: SVG.truck, route: '/vehiculos' },
-    { id: 'conductores', label: 'SOCIOS', svg: SVG.users, route: '/conductores' },
+    { id: 'conductores', label: 'CLIENTES', svg: SVG.users, route: '/conductores' },
     { id: 'seguros', label: 'SEGUROS', svg: SVG.shield, route: '/seguros' },
     { id: 'financieras', label: 'FINANCIERAS', svg: SVG.credit, route: '/financieras' },
     { id: 'talleres', label: 'TALLERES', svg: SVG.wrench, route: '/talleres' },

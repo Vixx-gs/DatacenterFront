@@ -16,7 +16,7 @@
         <span class="kpi-dot" [style.background]="c.color"></span>
       </div>
       <div class="kpi-value" [style.color]="c.color">{{ c.count }}</div>
-      <div class="kpi-label">socios activos</div>
+      <div class="kpi-label">clientes activos</div>
       <div class="kpi-bar">
         <div class="kpi-bar-fill" [style.width]="progressWidth(c.count)" [style.background]="c.color"></div>
       </div>
@@ -40,7 +40,7 @@
       <div
         style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
         <div>
-          <div class="chart-title" style="margin-bottom:2px;">Evolución de socios</div>
+          <div class="chart-title" style="margin-bottom:2px;">Evolución de clientes</div>
           <div class="chart-subtitle">{{ graficoTitulo }}</div>
         </div>
         <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
@@ -93,7 +93,7 @@
               <circle cx="5.5" cy="18.5" r="2.5" />
               <circle cx="18.5" cy="18.5" r="2.5" />
             </svg>
-            <svg *ngIf="s.label === 'Socios'" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            <svg *ngIf="s.label === 'Clientes'" width="20" height="20" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="1.8">
               <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
               <circle cx="9" cy="7" r="4" />
@@ -136,7 +136,7 @@
             <span
               style="background:#16a34a; color:#fff; font-size:9px; font-weight:700; padding:2px 8px; border-radius:20px; letter-spacing:0.06em;">ALTAS</span>
           </div>
-          <span style="font-size:12px; color:#6b7280;">socios dados de alta</span>
+          <span style="font-size:12px; color:#6b7280;">clientes dados de alta</span>
         </div>
       </div>
       <div class="ab-filters" (click)="$event.stopPropagation()">
@@ -222,7 +222,7 @@
             <span
               style="background:#dc2626; color:#fff; font-size:9px; font-weight:700; padding:2px 8px; border-radius:20px; letter-spacing:0.06em;">BAJAS</span>
           </div>
-          <span style="font-size:12px; color:#6b7280;">socios dados de baja</span>
+          <span style="font-size:12px; color:#6b7280;">clientes dados de baja</span>
         </div>
       </div>
       <div class="ab-filters" (click)="$event.stopPropagation()">

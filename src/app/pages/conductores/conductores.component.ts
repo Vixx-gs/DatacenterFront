@@ -110,6 +110,17 @@ export class ConductoresComponent implements OnInit {
 
   setFilterEmpresa(e: string) { this.filterEmpresa = e; this.applyFiltros(); }
   setFilterEmpresaEx(e: string) { this.filterEmpresaEx = e; this.applyFiltrosEx(); }
+  /** Color del nombre según la empresa del cliente (los mismos que los botones de filtro) */
+  colorEmpresa(empresa: string): string {
+    const e = (empresa || '').toUpperCase();
+    if (e.includes('SITTRANS')) return '#dc2626';
+    if (e.includes('ECOTRANS')) return '#18a04c';
+    if (e.includes('TRANSCOOP')) return '#0d3b3e';
+    if (e.includes('CENTRAL')) return '#d4580a';
+    if (e.includes('ALQUITRUCK')) return '#0f172a';
+    return '#0a0f2c';
+  }
+
   toggleExSocios() { this.mostrarExSocios = !this.mostrarExSocios; }
 
   formatFecha(f: string): string {
@@ -131,7 +142,7 @@ export class ConductoresComponent implements OnInit {
 
   exportarCSV() {
     const lista = this.mostrarExSocios ? this.filteredEx : this.filtered;
-    const nombre = this.mostrarExSocios ? 'ex-socios' : 'socios';
+    const nombre = this.mostrarExSocios ? 'ex-clientes' : 'clientes';
     const headers = ['Nombre', 'Apellidos', 'NIF', 'Móvil', 'Email', 'Empresa', 'Gestor', 'F. Alta', 'F. Baja'];
     const esc = (v: any) => `"${String(v ?? '').replace(/"/g, '""')}"`;
     const filas = lista.map(c => [

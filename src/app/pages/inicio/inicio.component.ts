@@ -89,7 +89,7 @@ export class InicioComponent implements OnInit, OnDestroy, AfterViewInit {
         this.total = s.transcoop + s.ecotransporte + s.centralcoop;
         this.miniStats = [
           { label: 'Total vehiculos', value: s.total_vehiculos, sub: 'en flota', color: '#2563eb' },
-          { label: 'Socios', value: s.total_conductores, sub: 'registrados', color: '#7c3aed' },
+          { label: 'Clientes', value: s.total_conductores, sub: 'registrados', color: '#7c3aed' },
           { label: 'En taller', value: s.vehiculos_en_taller, sub: 'vehiculos', color: s.vehiculos_en_taller > 0 ? '#dc2626' : '#6b7280' },
         ];
         // Actualizar último punto del gráfico con el total real
