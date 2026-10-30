@@ -94,7 +94,22 @@ export class VehiculosComponent implements OnInit {
         : this.bajasEstado === 'mostrar' ? true
         : !esBaja;
       return matchCoop && matchSearch && matchBaja;
-    });
+    }).sort((a, b) => this.compararMatricula(a.matricula, b.matricula));
+  }
+
+  // Orden por número de matrícula: primero tractoras (0064LFW < 1101LGB < 9844LSD),
+  // después remolques (R0181BCV < R9919BBZ); las que no empiezan por número, al final
+  private claveMatricula(m: string) {
+    const s = (m || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const remolque = /^R\d/.test(s);
+    const resto = remolque ? s.slice(1) : s;
+    const num = resto.match(/^\d+/)?.[0];
+    return { remolque, num: num ? parseInt(num, 10) : Number.MAX_SAFE_INTEGER, letras: num ? resto.slice(num.length) : resto };
+  }
+
+  private compararMatricula(a: string, b: string) {
+    const x = this.claveMatricula(a), y = this.claveMatricula(b);
+    return Number(x.remolque) - Number(y.remolque) || x.num - y.num || x.letras.localeCompare(y.letras);
   }
 
   toggleBajas() {
