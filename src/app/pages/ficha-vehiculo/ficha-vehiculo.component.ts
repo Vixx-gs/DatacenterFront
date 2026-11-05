@@ -26,6 +26,8 @@ export class FichaVehiculoComponent implements OnInit {
   contratos: any[] = [];
   historialConductores: any[] = [];
   conductorDetalle: any = null;
+  gps: any = null;
+  alertasGps: string[] = [];
   garantias: any = null;
   loading = true;
   activeSeguroTab = 'circulacion';
@@ -59,6 +61,10 @@ export class FichaVehiculoComponent implements OnInit {
           return new Date(b.fecha_fin).getTime() - new Date(a.fecha_fin).getTime();
         });
         this.loading = false;
+        this.api.getGpsVehiculo(matricula).subscribe({
+          next: (g) => { this.gps = g?.gps || null; this.alertasGps = g?.alertas || []; },
+          error: () => { }
+        });
         // Cargar datos completos del conductor actual
         if (this.vehiculo?.conductor_actual) {
           this.api.getConductorDetalleVehiculo(matricula).subscribe({

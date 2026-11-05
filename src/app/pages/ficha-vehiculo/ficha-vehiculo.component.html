@@ -28,6 +28,19 @@
     <!-- COL IZQUIERDA -->
     <div class="ficha-col">
 
+      <!-- GPS -->
+      <div class="ficha-card" *ngIf="gps">
+        <div class="ficha-card-title">GPS</div>
+        <div class="ficha-fields-2col">
+          <div class="ficha-field"><span class="ficha-field-label">Conductor GPS</span><span class="ficha-field-value">{{ gps.conductor_gps || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Estado</span><span class="ficha-field-value">{{ gps.movimiento_estado || gps.estado || '—' }}<ng-container *ngIf="gps.velocidad > 0"> · {{ gps.velocidad | number:'1.0-0' }} km/h</ng-container></span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Kilometraje</span><span class="ficha-field-value mono">{{ gps.kilometraje ? (gps.kilometraje | number:'1.0-0') + ' km' : '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Última conexión</span><span class="ficha-field-value mono">{{ gps.ultima_conexion ? gps.ultima_conexion.slice(0, 16) : '—' }} {{ gps.pais_iso || '' }}</span></div>
+          <div class="ficha-field" *ngIf="gps.latitud"><span class="ficha-field-label">Posición</span><span class="ficha-field-value"><a [href]="'https://www.google.com/maps?q=' + gps.latitud + ',' + gps.longitud" target="_blank" rel="noopener">Ver en el mapa</a></span></div>
+        </div>
+        <div *ngFor="let a of alertasGps" style="color:#dc2626; font-size:12px; font-weight:600; margin-top:8px;">⚠ {{ a }}</div>
+      </div>
+
       <!-- DATOS VEHÍCULO -->
       <div class="ficha-card">
         <div class="ficha-card-title">DATOS VEHÍCULO</div>
