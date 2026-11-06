@@ -27,6 +27,7 @@ export class FichaVehiculoComponent implements OnInit {
   historialConductores: any[] = [];
   conductorDetalle: any = null;
   gps: any = null;
+  sittrans: any = null;
   alertasGps: string[] = [];
   garantias: any = null;
   loading = true;
@@ -61,6 +62,10 @@ export class FichaVehiculoComponent implements OnInit {
           return new Date(b.fecha_fin).getTime() - new Date(a.fecha_fin).getTime();
         });
         this.loading = false;
+        this.api.getSittransVehiculo(matricula).subscribe({
+          next: (s) => { this.sittrans = s || null; },
+          error: () => { }
+        });
         this.api.getGpsVehiculo(matricula).subscribe({
           next: (g) => { this.gps = g?.gps || null; this.alertasGps = g?.alertas || []; },
           error: () => { }

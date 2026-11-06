@@ -28,6 +28,17 @@
     <!-- COL IZQUIERDA -->
     <div class="ficha-col">
 
+      <!-- SITTRANS -->
+      <div class="ficha-card" *ngIf="sittrans">
+        <div class="ficha-card-title">ADSCRIPCIÓN SITTRANS</div>
+        <div class="ficha-fields-2col">
+          <div class="ficha-field"><span class="ficha-field-label">Cliente</span><span class="ficha-field-value"><a *ngIf="sittrans.cliente_id && sittrans.cliente; else sinCliente" [routerLink]="['/conductores', sittrans.cliente_id]">{{ sittrans.cliente }}</a><ng-template #sinCliente>{{ sittrans.cliente || '—' }}</ng-template></span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Tipo</span><span class="ficha-field-value">{{ sittrans.tipo || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">Nº Fomento</span><span class="ficha-field-value mono">{{ sittrans.num_fomento || '—' }}</span></div>
+          <div class="ficha-field"><span class="ficha-field-label">F. Adscripción</span><span class="ficha-field-value mono">{{ sittrans.fecha_adscripcion || '—' }}</span></div>
+        </div>
+      </div>
+
       <!-- GPS -->
       <div class="ficha-card" *ngIf="gps">
         <div class="ficha-card-title">GPS</div>
