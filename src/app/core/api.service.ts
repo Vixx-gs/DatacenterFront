@@ -63,10 +63,6 @@ export class ApiService {
     return this.http.get(`${this.base}/vehiculos/${matricula}`);
   }
 
-  getSittransVehiculo(matricula: string): Observable<any> {
-    return this.http.get(`${this.base}/vehiculos/${encodeURIComponent(matricula)}/sittrans`);
-  }
-
   getGpsVehiculo(matricula: string): Observable<any> {
     return this.http.get(`${this.base}/vehiculos/${encodeURIComponent(matricula)}/gps`);
   }
