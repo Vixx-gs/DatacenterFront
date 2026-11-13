@@ -47,7 +47,7 @@ export class ConductoresComponent implements OnInit {
   }
 
   estabaActivo(c: any, desde: Date, hasta: Date): boolean {
-    const fi = this.parseFecha(c.fecha_prevista || c.fecha_inicio);
+    const fi = this.parseFecha(c.fecha_prevista);
     const fb = this.parseFecha(c.fecha_baja);
     if (!fi) return false;
     if (fi > hasta) return false;
@@ -64,8 +64,8 @@ export class ConductoresComponent implements OnInit {
   sortByFecha(arr: any[]): any[] {
     if (!this.sortDir) return arr;
     return [...arr].sort((a, b) => {
-      const fa = this.parseFecha(a.fecha_prevista || a.fecha_inicio);
-      const fb = this.parseFecha(b.fecha_prevista || b.fecha_inicio);
+      const fa = this.parseFecha(a.fecha_prevista);
+      const fb = this.parseFecha(b.fecha_prevista);
       if (!fa && !fb) return 0;
       if (!fa) return 1;
       if (!fb) return -1;
@@ -146,7 +146,7 @@ export class ConductoresComponent implements OnInit {
     const headers = ['Nombre', 'Apellidos', 'NIF', 'Móvil', 'Email', 'Empresa', 'Gestor', 'F. Alta', 'F. Baja'];
     const esc = (v: any) => `"${String(v ?? '').replace(/"/g, '""')}"`;
     const filas = lista.map(c => [
-      c.nombre, c.apellidos, c.nif, c.movil, c.email, c.empresa, c.gestor, c.fecha_prevista || c.fecha_inicio, c.fecha_baja
+      c.nombre, c.apellidos, c.nif, c.movil, c.email, c.empresa, c.gestor, c.fecha_prevista, c.fecha_baja
     ].map(esc).join(','));
     const csv = '﻿' + [headers.map(esc).join(','), ...filas].join('\r\n');
     const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })), download: `${nombre}_${new Date().toISOString().split('T')[0]}.csv` });
