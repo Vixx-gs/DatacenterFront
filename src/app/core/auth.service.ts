@@ -23,8 +23,6 @@ export class AuthService {
   private _token: string | null = null;  // Token en memoria, NO en localStorage
   private _usuario: string | null = null;
   private _rol: string | null = null;     // rol del portal (solo con SSO)
-  private inactivityTimer: any;
-  private readonly INACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 minutos
 
   /** En *.gesticotrans.app solo se entra por el portal (sin formulario). */
   readonly soloPortal = window.location.hostname.endsWith('.gesticotrans.app');
@@ -38,10 +36,7 @@ export class AuthService {
         if (s) { this._token = s.token; this._usuario = s.usuario; this._rol = s.rol; }
       } catch {}
     }
-    this.resetInactivityTimer();
-    ['click', 'keypress', 'mousemove', 'scroll'].forEach(ev =>
-      document.addEventListener(ev, () => this.resetInactivityTimer())
-    );
+    // Sin cierre por inactividad: la sesión se mantiene mientras la pestaña esté abierta.
   }
 
   login(usuario: string, password: string): Observable<any> {
@@ -49,7 +44,6 @@ export class AuthService {
       tap((res: any) => {
         this._token = res.token;
         this._usuario = res.usuario;
-        this.resetInactivityTimer();
       })
     );
   }
@@ -73,7 +67,6 @@ export class AuthService {
         this._usuario = res.usuario;
         this._rol = res.rol || null;
         sessionStorage.setItem(SESION_KEY, JSON.stringify({ token: res.token, usuario: res.usuario, rol: this._rol }));
-        this.resetInactivityTimer();
       })
     );
   }
@@ -83,7 +76,6 @@ export class AuthService {
     this._token = null;
     this._usuario = null;
     sessionStorage.removeItem(SESION_KEY);
-    clearTimeout(this.inactivityTimer);
     window.location.href = 'https://gesticotrans.app';
   }
 
@@ -91,7 +83,6 @@ export class AuthService {
     this._token = null;
     this._usuario = null;
     sessionStorage.removeItem(SESION_KEY);
-    clearTimeout(this.inactivityTimer);
     if (reason === 'inactivity') {
       this.router.navigate(['/login'], { queryParams: { reason: 'inactivity' } });
     } else if (reason === 'horario') {
@@ -109,13 +100,4 @@ export class AuthService {
     return this._usuario === 'admin' ? 'admin' : this._usuario ? 'gestor' : null;
   }
   get isLoggedIn(): boolean { return !!this._token; }
-
-  private resetInactivityTimer() {
-    clearTimeout(this.inactivityTimer);
-    if (this._token) {
-      this.inactivityTimer = setTimeout(() => {
-        this.logout('inactivity');
-      }, this.INACTIVITY_TIMEOUT);
-    }
-  }
 }

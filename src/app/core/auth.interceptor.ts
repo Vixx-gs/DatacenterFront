@@ -18,12 +18,10 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(req).pipe(
       catchError((err: HttpErrorResponse) => {
-        // El backend responde 403 fuera de horario y 401 si falta el token o
-        // ha caducado. Sin sesión (p. ej. en la pantalla de login) un 401 es
-        // normal y no debe mostrar el aviso de horario.
-        if (err.status === 403) {
-          this.auth.logout('horario');
-        } else if (err.status === 401 && token) {
+        // 401: falta el token o ha caducado (sin sesión, p. ej. en la pantalla de
+        // login, un 401 es normal). Ya no hay horario de acceso: un 403 es un
+        // permiso concreto y no cierra la sesión.
+        if (err.status === 401 && token) {
           this.auth.logout();
         }
         return throwError(() => err);
